@@ -1,12 +1,16 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import ReactQuill from 'react-quill';
+import { useDebounce } from 'use-debounce';
 import AnalysisResults from './components/AnalysisResults';
 import AnalysisSelector from './components/AnalysisSelector';
 import { editorHeaderModules } from './components/Options';
+import HighLightCommonWords from './functions/HighlightCommonWords';
 
 export default function TextEditor() {
-  const [value, setValue] = useState(`
-  <p><span style="background-color: yellow;">hola XDDD</span></p>`);
+  const [userInput, setUserInput] = useState();
+  const [debouncedInput] = useDebounce(userInput, 500);
+
+  const [totalCommonWords, setTotalCommonWords] = useState(0);
 
   const [selectedOption, setSelectedOption] = useState({
     section: '',
@@ -30,16 +34,38 @@ export default function TextEditor() {
     },
   ]);
 
+  const [lastFetch, setLastFetch] = useState(Date.now());
+  const quillRef = useRef();
+  useEffect(() => {
+    // Solo ejecuta el efecto si han pasado 500 milisegundos desde la última vez
+    if (Date.now() - lastFetch > 1000) {
+      let parser = new DOMParser();
+      let doc = parser.parseFromString(userInput, 'text/html');
+      let texto = doc.body.textContent;
+      let highlightData = HighLightCommonWords(texto);
+      setTotalCommonWords(highlightData.total);
+      setUserInput(highlightData.text);
+      setLastFetch(Date.now());
+    }
+  }, [debouncedInput, lastFetch]);
+
+  useEffect(() => {
+    const quill = quillRef.current.getEditor(); // Obtiene la instancia de Quill
+    const length = quill.getLength(); // Obtiene la longitud del contenido actual
+    quill.setSelection(length, length); // Mueve el cursor al final
+  }, [userInput]);
+
   return (
     <div className="relative h-screen w-full bg-white p-2">
       <div className="h-full w-full flex items-center justify-center">
-        <div className="relative h-full w-2/3 flex items-center justify-center">
+        <div className="relative h-full w-2/3 flex flex-col items-center justify-center">
           <ReactQuill
             className="h-full w-full"
             theme="snow"
-            value={value}
-            onChange={setValue}
             modules={editorHeaderModules}
+            value={userInput}
+            onChange={setUserInput}
+            ref={quillRef}
           />
         </div>
         <div className="relative h-full w-1/3 flex flex-col items-center justify-start gap-4 text-center">
@@ -47,7 +73,7 @@ export default function TextEditor() {
           <AnalysisResults
             analyses={analysisResult}
             duplicateWords={10}
-            commonWords={20}
+            commonWords={totalCommonWords}
             selectedOptionLimits={selectedOption}
           />
         </div>

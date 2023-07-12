@@ -3,7 +3,7 @@ import commonWords from '../../../assets/lexical/commonwords.json';
 export default function HighLightCommonWords(input) {
   let parser = new DOMParser();
   let doc = parser.parseFromString(input, 'text/html');
-
+  let totalCommonWords = 0;
   function highlightCommonWords(node) {
     if (node.nodeType === Node.TEXT_NODE) {
       for (let word of commonWords) {
@@ -21,5 +21,5 @@ export default function HighLightCommonWords(input) {
 
   let highlightedStr = `<p>${doc.body.innerHTML}</p>`.replace(/&gt;/g, '>').replace(/&lt;/g, '<');
 
-  return highlightedStr;
+  return { text: highlightedStr, total: totalCommonWords };
 }
