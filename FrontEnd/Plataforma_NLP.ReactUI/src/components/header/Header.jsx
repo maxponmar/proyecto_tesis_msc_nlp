@@ -1,7 +1,7 @@
 import { useContext, useEffect, useState } from 'react';
 import { FaUserAlt } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
-import ItnLogo from '../../assets/tecnm_itn.jpg';
+import ItnLogo from '../../assets/images/tecnm_itn.jpg';
 import config from '../../config/config.json';
 import { AuthContext } from '../../redux/AuthContext';
 

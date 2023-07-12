@@ -1,6 +1,6 @@
 import { useContext, useRef } from 'react';
 import { Navigate } from 'react-router-dom';
-import ItnLogo from '../../assets/tecnm_itn.jpg';
+import ItnLogo from '../../assets/images/tecnm_itn.jpg';
 import { AuthContext } from '../../redux/AuthContext';
 
 function Login() {

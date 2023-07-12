@@ -1,7 +1,7 @@
 import { useContext, useState } from 'react';
 import { BiHelpCircle, BiLogIn, BiLogOut, BiSupport } from 'react-icons/bi';
 import { FaBars } from 'react-icons/fa';
-import ItnLogo from '../../assets/itn.ico';
+import ItnLogo from '../../assets/images/itn.ico';
 import { AuthContext } from '../../redux/AuthContext';
 import routes from '../../route/Routes';
 import SidebarLink from '../../route/SidebarLink';
