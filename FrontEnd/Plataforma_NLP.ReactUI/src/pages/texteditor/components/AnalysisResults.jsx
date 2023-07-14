@@ -1,11 +1,11 @@
 import AnalysisScore from './AnalysisScore';
 
-export default function AnalysisResults({ analyses, duplicateWords, commonWords, selectedOptionLimits }) {
+export default function AnalysisResults({ analyses, repeatedWords, commonWords, selectedOptionLimits }) {
   return (
     <div>
       <h2 className="text-3xl font-bold mb-6">Resultados</h2>
       <p>
-        Palabras Repetidas: <span className="font-bold text-xl">{duplicateWords}</span>
+        Palabras Repetidas: <span className="font-bold text-xl">{repeatedWords}</span>
       </p>
       <p>
         Palabras Comunes: <span className="font-bold text-xl">{commonWords}</span>
