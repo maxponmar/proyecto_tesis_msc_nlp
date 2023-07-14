@@ -33,10 +33,15 @@ export default function HighLightCommonWords(input) {
   let repeatedWords = detectarPalabrasRepetidas(input);
 
   let totalCommonWords = 0;
+  let totalRepeatedWords = 0;
+
   function highlightCommonWords(node) {
     if (node.nodeType === Node.TEXT_NODE) {
       for (let commonWord of commonWords) {
         const regex = new RegExp(`\\b${commonWord}\\b`, 'g');
+        let matches = node.textContent.match(regex);
+        let numReplacements = matches ? matches.length : 0;
+        totalCommonWords = totalCommonWords + numReplacements;
         node.textContent = node.textContent.replace(
           regex,
           `<span style="background-color: yellow;">${commonWord}</span>`,
@@ -44,6 +49,9 @@ export default function HighLightCommonWords(input) {
       }
       for (let repeatedWord in repeatedWords) {
         const regex = new RegExp(`\\b${repeatedWord}\\b`, 'g');
+        let matches = node.textContent.match(regex);
+        let numReplacements = matches ? matches.length : 0;
+        totalRepeatedWords = totalRepeatedWords + numReplacements;
         node.textContent = node.textContent.replace(regex, `<u style="color: red;">${repeatedWord}</u>`);
       }
     } else {
@@ -57,5 +65,6 @@ export default function HighLightCommonWords(input) {
 
   let highlightedStr = `<p>${doc.body.innerHTML}</p>`.replace(/&gt;/g, '>').replace(/&lt;/g, '<');
 
-  return { text: highlightedStr, total: totalCommonWords };
+  let result = { highlightedText: highlightedStr, totalCommonWords, repeatedWords, totalRepeatedWords };
+  return result;
 }
