@@ -1,14 +1,50 @@
 import commonWords from '../../../assets/lexical/commonwords.json';
 
+function detectarPalabrasRepetidas(cadena) {
+  let palabras = cadena
+    .toLowerCase()
+    .replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g, '')
+    .split(' ');
+  let conteoPalabras = {};
+
+  for (let i = 0; i < palabras.length; i++) {
+    let palabra = palabras[i];
+    if (palabra in conteoPalabras) {
+      conteoPalabras[palabra]++;
+    } else {
+      conteoPalabras[palabra] = 1;
+    }
+  }
+
+  let palabrasRepetidas = {};
+  for (let palabra in conteoPalabras) {
+    if (conteoPalabras[palabra] > 1) {
+      palabrasRepetidas[palabra] = conteoPalabras[palabra];
+    }
+  }
+
+  return palabrasRepetidas;
+}
+
 export default function HighLightCommonWords(input) {
   let parser = new DOMParser();
   let doc = parser.parseFromString(input, 'text/html');
+
+  let repeatedWords = detectarPalabrasRepetidas(input);
+
   let totalCommonWords = 0;
   function highlightCommonWords(node) {
     if (node.nodeType === Node.TEXT_NODE) {
-      for (let word of commonWords) {
-        const regex = new RegExp(`\\b${word}\\b`, 'g');
-        node.textContent = node.textContent.replace(regex, `<span style="background-color: yellow;">${word}</span>`);
+      for (let commonWord of commonWords) {
+        const regex = new RegExp(`\\b${commonWord}\\b`, 'g');
+        node.textContent = node.textContent.replace(
+          regex,
+          `<span style="background-color: yellow;">${commonWord}</span>`,
+        );
+      }
+      for (let repeatedWord in repeatedWords) {
+        const regex = new RegExp(`\\b${repeatedWord}\\b`, 'g');
+        node.textContent = node.textContent.replace(regex, `<u style="color: red;">${repeatedWord}</u>`);
       }
     } else {
       for (let child of node.childNodes) {

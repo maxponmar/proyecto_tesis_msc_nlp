@@ -44,6 +44,7 @@ export default function TextEditor() {
       let texto = doc.body.textContent;
       let highlightData = HighLightCommonWords(texto);
       setTotalCommonWords(highlightData.total);
+      console.log(userInput);
       setUserInput(highlightData.text);
       setLastFetch(Date.now());
     }
