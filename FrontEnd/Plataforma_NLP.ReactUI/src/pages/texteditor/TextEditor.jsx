@@ -4,6 +4,7 @@ import { useDebounce } from 'use-debounce';
 import AnalysisResults from './components/AnalysisResults';
 import AnalysisSelector from './components/AnalysisSelector';
 import { editorHeaderModules } from './components/Options';
+import AnalyzeText from './functions/AnalyzeText';
 import HighLightCommonWords from './functions/HighlightCommonWords';
 
 export default function TextEditor() {
@@ -11,6 +12,7 @@ export default function TextEditor() {
   const [debouncedInput] = useDebounce(userInput, 500);
 
   const [totalCommonWords, setTotalCommonWords] = useState(0);
+  const [totalRepeatedWords, setTotalRepeatedWords] = useState(0);
 
   const [selectedOption, setSelectedOption] = useState({
     section: '',
@@ -42,10 +44,15 @@ export default function TextEditor() {
       let parser = new DOMParser();
       let doc = parser.parseFromString(userInput, 'text/html');
       let texto = doc.body.textContent;
+
+      var analysisResults = AnalyzeText(texto);
+      setAnalysisResult(analysisResults);
+
       let highlightData = HighLightCommonWords(texto);
-      setTotalCommonWords(highlightData.total);
-      console.log(userInput);
-      setUserInput(highlightData.text);
+      setTotalCommonWords(highlightData.totalCommonWords);
+      setTotalRepeatedWords(highlightData.totalRepeatedWords);
+
+      setUserInput(highlightData.highlightedText);
       setLastFetch(Date.now());
     }
   }, [debouncedInput, lastFetch]);
@@ -71,12 +78,16 @@ export default function TextEditor() {
         </div>
         <div className="relative h-full w-1/3 flex flex-col items-center justify-start gap-4 text-center">
           <AnalysisSelector selectedOption={selectedOption} setSelectedOption={setSelectedOption} />
-          <AnalysisResults
-            analyses={analysisResult}
-            duplicateWords={10}
-            commonWords={totalCommonWords}
-            selectedOptionLimits={selectedOption}
-          />
+          {selectedOption.section ? (
+            <AnalysisResults
+              analyses={analysisResult}
+              commonWords={totalCommonWords}
+              repeatedWords={totalRepeatedWords}
+              selectedOptionLimits={selectedOption}
+            />
+          ) : (
+            <p>Seleccione una opcion para ver los resultados</p>
+          )}
         </div>
       </div>
     </div>

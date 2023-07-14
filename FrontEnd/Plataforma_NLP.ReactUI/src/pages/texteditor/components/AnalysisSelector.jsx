@@ -8,7 +8,7 @@ export default function AnalysisSelector({ selectedOption, setSelectedOption }) 
 
   return (
     <div className="w-2/3">
-      <p>Por favor, elija que evaluara:</p>
+      <p className="my-4">Por favor, elija que evaluara:</p>
       <FormControl fullWidth>
         <InputLabel>Análisis</InputLabel>
         <Select value={selectedOption.section ?? '0'} label="Análisis" onChange={handleChange}>
