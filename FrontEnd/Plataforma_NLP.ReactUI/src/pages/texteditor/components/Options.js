@@ -1,17 +1,17 @@
 export const editorHeaderModules = {
   toolbar: [
-    [{ header: [1, 2, 3, 4, 5, 6, false] }],
-    [{ size: [] }],
-    ['bold', 'italic', 'underline', 'strike', 'blockquote'],
-    [{ list: 'ordered' }, { list: 'bullet' }, { indent: '-1' }, { indent: '+1' }],
-    [
-      {
-        color: ['black', 'red', 'blue', 'yellow'],
-      },
-      {
-        background: ['black', 'red', 'blue', 'yellow'],
-      },
-    ],
+    // [{ header: [1, 2, 3, 4, 5, 6, false] }],
+    [{ size: ['normal'] }],
+    // ['bold', 'italic', 'underline', 'strike', 'blockquote'],
+    // [{ list: 'ordered' }, { list: 'bullet' }, { indent: '-1' }, { indent: '+1' }],
+    // [
+    //   {
+    //     color: ['black', 'red', 'blue', 'yellow'],
+    //   },
+    //   {
+    //     background: ['black', 'red', 'blue', 'yellow'],
+    //   },
+    // ],
   ],
 };
 
