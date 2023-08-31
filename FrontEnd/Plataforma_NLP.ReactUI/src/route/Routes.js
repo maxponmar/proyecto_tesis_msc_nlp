@@ -21,7 +21,7 @@ const routes = [
   {
     path: '/texteditor',
     component: TextEditor,
-    isProtected: false,
+    isProtected: true,
     icon: BiPencil,
     title: 'Editor',
     allowedRoles: ['ALL'],
