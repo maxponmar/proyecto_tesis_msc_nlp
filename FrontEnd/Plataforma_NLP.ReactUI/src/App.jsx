@@ -3,14 +3,13 @@ import { Navigate, Route, Routes } from 'react-router-dom';
 import Header from './components/header/Header';
 import Sidebar from './components/sidebar/Sidebar';
 import config from './config/config.json';
-import AuthContextProvider from './redux/AuthContext';
 import ProtectedRoute from './route/ProtectedRoute';
 import routes from './route/Routes';
 function App() {
   document.title = config.appTitle;
 
   return (
-    <AuthContextProvider>
+    <>
       <div className="min-h-screen bg-stone-200">
         <Header />
         <Sidebar />
@@ -34,7 +33,7 @@ function App() {
         </div>
       </div>
       <Toaster />
-    </AuthContextProvider>
+    </>
   );
 }
 

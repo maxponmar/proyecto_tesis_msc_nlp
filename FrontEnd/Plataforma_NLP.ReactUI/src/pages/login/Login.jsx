@@ -1,29 +1,12 @@
 import { useAuth0 } from '@auth0/auth0-react';
-import { useContext, useRef } from 'react';
 import { Navigate } from 'react-router-dom';
 import ItnLogo from '../../assets/images/tecnm_itn.jpg';
-import { AuthContext } from '../../redux/AuthContext';
 
 function Login() {
-  const AuthCtx = useContext(AuthContext);
-
-  const { loginWithRedirect } = useAuth0();
-
-  const usernameInputRef = useRef();
-  const passwordInputRef = useRef();
-
-  const loginHandler = () => {
-    AuthCtx.login(usernameInputRef.current.value, passwordInputRef.current.value);
-  };
-
-  const keyPressHandler = (e) => {
-    // if (e.key === 'Enter') loginHandler();
-    loginWithRedirect();
-  };
-
+  const { loginWithRedirect, isAuthenticated } = useAuth0();
   return (
     <div className="relative flex flex-col justify-center items-center h-[calc(100vh-65px)]">
-      {AuthCtx.isAuthenticated ? <Navigate to="/" /> : null}
+      {isAuthenticated ? <Navigate to="/" /> : null}
 
       <div className="relative sm:max-w-sm max-w-[300px]">
         <div className="bg-stone-900 shadow-lg w-full h-full rounded-3xl absolute  transform -rotate-6"></div>

@@ -1,14 +1,14 @@
-import { useContext, useState } from 'react';
+import { useAuth0 } from '@auth0/auth0-react';
+import { useState } from 'react';
 import { BiHelpCircle, BiLogIn, BiLogOut, BiSupport } from 'react-icons/bi';
 import { FaBars } from 'react-icons/fa';
 import ItnLogo from '../../assets/images/itn.ico';
-import { AuthContext } from '../../redux/AuthContext';
 import routes from '../../route/Routes';
 import SidebarLink from '../../route/SidebarLink';
 
 function Sidebar() {
   const [showSidebar, setShowSidebar] = useState(false);
-  const auth = useContext(AuthContext);
+  const { isAuthenticated, user } = useAuth0();
 
   return (
     <>
@@ -39,8 +39,8 @@ function Sidebar() {
                 .map((route, index) => {
                   if (
                     !route.isProtected ||
-                    (auth.isAuthenticated && route.isProtected && route.allowedRoles?.includes('ALL')) ||
-                    (route.isProtected && route.allowedRoles.some((role) => auth.user.roles.includes(role)))
+                    (isAuthenticated && route.isProtected && route.allowedRoles?.includes('ALL')) ||
+                    (route.isProtected && route.allowedRoles.some((role) => user.includes(role)))
                   )
                     return (
                       <SidebarLink
@@ -54,7 +54,7 @@ function Sidebar() {
                 })}
             </div>
             <div>
-              {auth.isAuthenticated ? (
+              {isAuthenticated ? (
                 <SidebarLink title="Logout" link="/" icon={<BiLogOut />} onClick={() => auth.logout()} />
               ) : (
                 <SidebarLink title="Login" link="/login" icon={<BiLogIn />} onClick={() => setShowSidebar(false)} />
