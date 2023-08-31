@@ -3,7 +3,7 @@ import { Navigate } from 'react-router-dom';
 import ItnLogo from '../../assets/images/tecnm_itn.jpg';
 
 function Login() {
-  const { loginWithRedirect, isAuthenticated } = useAuth0();
+  const { loginWithPopup, isAuthenticated } = useAuth0();
   return (
     <div className="relative flex flex-col justify-center items-center h-[calc(100vh-65px)]">
       {isAuthenticated ? <Navigate to="/" /> : null}
@@ -25,7 +25,7 @@ function Login() {
           <div className="mt-10">
             <div className="mt-7">
               <button
-                onClick={(e) => loginWithRedirect()}
+                onClick={(e) => loginWithPopup()}
                 className="bg-blue-500 w-full py-3 rounded-xl text-white shadow-xl hover:shadow-inner focus:outline-none transition duration-500 ease-in-out  transform hover:-translate-x hover:scale-105"
               >
                 Iniciar Sesion
