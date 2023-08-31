@@ -1,8 +1,10 @@
+import { useAuth0 } from '@auth0/auth0-react';
 import React from 'react';
 import { Navigate } from 'react-router-dom';
 
 const ProtectedRoute = ({ isProtected, allowedRoles, element }) => {
-  if (isProtected && !auth.isAuthenticated) {
+  const { isAuthenticated } = useAuth0();
+  if (isProtected && !isAuthenticated) {
     return <Navigate to="/login" />;
   }
 

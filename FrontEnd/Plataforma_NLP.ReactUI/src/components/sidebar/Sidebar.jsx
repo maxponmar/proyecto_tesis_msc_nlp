@@ -40,7 +40,7 @@ function Sidebar() {
                   if (
                     !route.isProtected ||
                     (isAuthenticated && route.isProtected && route.allowedRoles?.includes('ALL')) ||
-                    (route.isProtected && route.allowedRoles.some((role) => user.includes(role)))
+                    (route.isProtected && route.allowedRoles.some((role) => user?.name.includes(role)))
                   )
                     return (
                       <SidebarLink
