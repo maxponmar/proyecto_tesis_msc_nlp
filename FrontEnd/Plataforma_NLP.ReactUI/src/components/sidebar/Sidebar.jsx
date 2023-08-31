@@ -8,7 +8,7 @@ import SidebarLink from '../../route/SidebarLink';
 
 function Sidebar() {
   const [showSidebar, setShowSidebar] = useState(false);
-  const { isAuthenticated, user } = useAuth0();
+  const { isAuthenticated, user, logout } = useAuth0();
 
   return (
     <>
@@ -55,7 +55,7 @@ function Sidebar() {
             </div>
             <div>
               {isAuthenticated ? (
-                <SidebarLink title="Logout" link="/" icon={<BiLogOut />} onClick={() => auth.logout()} />
+                <SidebarLink title="Logout" link="/" icon={<BiLogOut />} onClick={() => logout()} />
               ) : (
                 <SidebarLink title="Login" link="/login" icon={<BiLogIn />} onClick={() => setShowSidebar(false)} />
               )}
