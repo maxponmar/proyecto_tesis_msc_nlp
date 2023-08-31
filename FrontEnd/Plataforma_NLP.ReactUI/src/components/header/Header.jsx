@@ -1,4 +1,3 @@
-import { FaUserAlt } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 import ItnLogo from '../../assets/images/tecnm_itn.jpg';
 import config from '../../config/config.json';
@@ -21,12 +20,12 @@ function Header() {
             <p className="text-itn mr-1">{user.name}</p>
             <Tooltip tooltipText="Cerrar Sesión">
               <button
-                className="text-black text-lg font-bold bg-stone-900 px-2 rounded-full hover:shadow-inner focus:outline-none transition duration-100 ease-in-out transform hover:-translate-x hover:scale-105 active:translate-y-1 h-[35px]"
+                className="h-9 w-9 bg-stone-900 rounded-full hover:shadow-inner focus:outline-none transition duration-100 ease-in-out transform hover:-translate-x hover:scale-105 active:translate-y-1 flex items-center justify-center"
                 onClick={() => {
                   logout();
                 }}
               >
-                <FaUserAlt className="text-white" />
+                <img src={user.picture} className="h-8 w-8" />
               </button>
             </Tooltip>
           </div>
