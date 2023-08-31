@@ -1,11 +1,22 @@
+import { useAuth0 } from '@auth0/auth0-react';
 import { Link } from 'react-router-dom';
+import Login from '../login/Login';
 
 function Home() {
+  const { isAuthenticated, user } = useAuth0();
+
   return (
     <div className="animate-fadeIn flex flex-col items-center justify-center py-10 px-5 h-full">
       <h2 className="text-2xl sm:text-3xl font-semibold text-center">
-        <span className="font-bold block">Bienvenid@</span>
+        <span className="font-bold block">{isAuthenticated ? `Bienvenid@ ${user.name}` : 'Bienvenid@'}</span>
       </h2>
+
+      {!isAuthenticated ? (
+        <>
+          <p className="text-xl font-bold">Inicie sesión para acceder a la plataforma</p>
+          <Login />
+        </>
+      ) : null}
       <p className="text-xl font-bold">Abra el menú de la izquiera para ver más opciones</p>
       <Link
         to="/support"
