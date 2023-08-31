@@ -1,3 +1,4 @@
+import { useAuth0 } from '@auth0/auth0-react';
 import { useContext, useRef } from 'react';
 import { Navigate } from 'react-router-dom';
 import ItnLogo from '../../assets/images/tecnm_itn.jpg';
@@ -5,6 +6,8 @@ import { AuthContext } from '../../redux/AuthContext';
 
 function Login() {
   const AuthCtx = useContext(AuthContext);
+
+  const { loginWithRedirect } = useAuth0();
 
   const usernameInputRef = useRef();
   const passwordInputRef = useRef();
@@ -14,7 +17,8 @@ function Login() {
   };
 
   const keyPressHandler = (e) => {
-    if (e.key === 'Enter') loginHandler();
+    // if (e.key === 'Enter') loginHandler();
+    loginWithRedirect();
   };
 
   return (
@@ -32,34 +36,16 @@ function Login() {
               alt="Intituto Tecnologico de Nogales"
             />
           </div>
-          <label className="block mt-3 text-sm text-center text-black font-bold">Iniciar Sesion</label>
+          <label className="block mt-3 text-sm text-center text-black font-bold">
+            Inicie sesion con alguna correo electronico o red social
+          </label>
           <div className="mt-10">
-            <div>
-              <input
-                type="text"
-                placeholder="Usuario"
-                ref={usernameInputRef}
-                className="mt-1 block w-full border-none bg-gray-100 h-11 rounded-xl shadow-lg hover:bg-blue-100 focus:bg-blue-100 focus:ring-0 px-4"
-                onKeyDown={keyPressHandler}
-              />
-            </div>
-
-            <div className="mt-7">
-              <input
-                type="password"
-                placeholder="Contraseña"
-                ref={passwordInputRef}
-                className="mt-1 block w-full border-none bg-gray-100 h-11 rounded-xl shadow-lg hover:bg-blue-100 focus:bg-blue-100 focus:ring-0 px-4"
-                onKeyDown={keyPressHandler}
-              />
-            </div>
-
             <div className="mt-7">
               <button
-                onClick={(e) => loginHandler()}
+                onClick={(e) => loginWithRedirect()}
                 className="bg-blue-500 w-full py-3 rounded-xl text-white shadow-xl hover:shadow-inner focus:outline-none transition duration-500 ease-in-out  transform hover:-translate-x hover:scale-105"
               >
-                Login
+                Iniciar Sesion
               </button>
             </div>
           </div>
