@@ -20,12 +20,12 @@ function Header() {
             <p className="text-itn mr-1">{user.name}</p>
             <Tooltip tooltipText="Cerrar Sesión">
               <button
-                className="h-9 w-9 bg-stone-900 rounded-full hover:shadow-inner focus:outline-none transition duration-100 ease-in-out transform hover:-translate-x hover:scale-105 active:translate-y-1 flex items-center justify-center"
+                className="h-9 w-9 rounded-full hover:shadow-inner focus:outline-none transition duration-100 ease-in-out transform hover:-translate-x hover:scale-105 active:translate-y-1 flex items-center justify-center"
                 onClick={() => {
                   logout();
                 }}
               >
-                <img src={user.picture} className="h-8 w-8" />
+                <img src={user.picture} className="h-9 w-9 rounded-full" />
               </button>
             </Tooltip>
           </div>
