@@ -9,7 +9,7 @@ import stopWordsFromFile from '../../assets/lexical/stopwords.json';
 
 export default function Tests() {
   const [content, setContent] = useState(
-    '<p>Esta es una pruebal con una palabra <span style="color: red">repetida</span> y otra <mark>comun</mark>. pruebas</p>',
+    '<p>Esta es una prueba con una palabra <span style="color: red">repetida</span> <span style="color: red">repetida</span> y otra <mark>comun</mark></p>',
   );
 
   function createWordDictionary(text) {
@@ -42,6 +42,29 @@ export default function Tests() {
     return wordDictionary;
   }
 
+  function highlightText(text, dictionary) {
+    // Split text into words and non-word characters (like spaces, punctuation)
+    const parts = text.match(/\w+|\W+/g);
+    console.log(parts);
+    return parts
+      .map((part) => {
+        const lowerPart = part.toLowerCase();
+        if (/\w+/.test(part) && dictionary[lowerPart]) {
+          if (dictionary[lowerPart].isStopWord) {
+            return part;
+          } else if (dictionary[lowerPart].isCommonWord) {
+            return `<mark>${part}</mark>`;
+          } else if (dictionary[lowerPart].isRepeatedWord) {
+            return `<span style="color: red">${part}</span>`;
+          } else {
+            return part;
+          }
+        }
+        return part;
+      })
+      .join('');
+  }
+
   const editor = useEditor({
     extensions: [StarterKit.configure(), TextStyle, Color, Highlight],
     content: content,
@@ -52,15 +75,28 @@ export default function Tests() {
       },
     },
     onUpdate({ editor }) {
-      console.log(editor.getHTML());
-      console.log(editor.getText());
+      // console.log(editor.getHTML());
+      // console.log(editor.getText());
       const dictionary = createWordDictionary(editor.getText());
       console.log(dictionary);
+      const highlightedText = highlightText(editor.getText(), dictionary);
+      setContent(highlightedText);
+      console.log(highlightedText);
+      editor.commands.setContent(highlightedText);
     },
   });
 
   return (
     <div>
+      <button
+        onClick={() => {
+          const dictionary = createWordDictionary(editor.getText());
+          const highlightedText = highlightText(editor.getText(), dictionary);
+          editor.commands.insertContent(highlightedText);
+        }}
+      >
+        test
+      </button>
       <EditorContent editor={editor} />
     </div>
   );
