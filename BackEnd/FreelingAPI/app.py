@@ -1,6 +1,7 @@
 from flask import Flask, jsonify, request
 import subprocess
 import uuid
+import os
 
 start_freeling_server_command = 'analyze -f es.cfg --server --port 50005 &'
 check_if_freeling_server_is_started_command = 'ps aux | grep freeling'
@@ -69,8 +70,14 @@ def create_file():
     if not text:
         return jsonify({"message": "No text provided"}), 400
 
+    temporal_directory = "temp"
+
+    # Check if the temporal directory exists, creat it if not
+    if not os.path.exists(temporal_directory):
+        os.makedirs(temporal_directory)
+
     # Generate a unique file name
-    filename = f"temp/{uuid.uuid4()}.txt"
+    filename = os.path.join(temporal_directory, f"{uuid.uuid4()}.txt")
 
     # Write the text to the file
     with open(filename, 'w') as file:
