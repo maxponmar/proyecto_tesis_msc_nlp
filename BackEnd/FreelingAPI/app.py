@@ -3,11 +3,23 @@ import subprocess
 
 print("Starting Freeling Server...")
 
-start_freeling_server = 'analyze -f es.cfg --server --port 50005 &'
+start_freeling_server_command = 'analyze -f es.cfg --server --port 50005 &'
 check_if_freeling_server_is_started = 'ps -ef | grep "freeling/config/es.cfg- --server --port 50005"'
 run_freeling = 'analyzer_client 50005 '
 
 app = Flask(__name__)
+
+def run_bash_command(command):
+    try:
+        output = subprocess.check_output(command, shell=True, stderr=subprocess.STDOUT)
+        return output.decode('utf-8')
+    except subprocess.CalledProcessError as e:
+        return "An error occurred: " + e.output.decode('utf-8')
+
+@app.route('/startfreeling', methods=['GET'])
+def start_freeling():
+    result = run_bash_command(start_freeling_server_command)
+    return jsonify({"output": result})
 
 @app.route('/healthcheck')
 def health_check():
