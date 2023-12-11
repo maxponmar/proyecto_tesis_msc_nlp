@@ -4,7 +4,7 @@ import subprocess
 print("Starting Freeling Server...")
 
 start_freeling_server_command = 'analyze -f es.cfg --server --port 50005 &'
-check_if_freeling_server_is_started = 'ps -ef | grep "freeling/config/es.cfg- --server --port 50005"'
+check_if_freeling_server_is_started_command = 'ps aux | grep freeling'
 run_freeling = 'analyzer_client 50005 '
 
 app = Flask(__name__)
@@ -31,11 +31,14 @@ def start_freeling():
 
 @app.route('/healthcheck')
 def health_check():
-    output = subprocess.check_output(check_if_freeling_server_is_started.split())
-    text = output.decode('utf-8')
-    print(text)
-    freeling_started = "Ok" if "\n" in text else "Bad"
-    return jsonify({"status": freeling_started})
+    result = run_bash_command(check_if_freeling_server_is_started_command)
+    print("\n==========")
+    print(result)
+    if "freeling/config/es.cfg" in result:
+        return jsonify({"status": "OK"})
+    else:
+        return jsonify({"status": "BAD"})
+    
 
 @app.route('/freeling', methods=['POST'])
 def analyze_file_with_freeling():
