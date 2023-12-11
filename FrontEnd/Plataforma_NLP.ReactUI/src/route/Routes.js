@@ -6,6 +6,7 @@ import Login from '../pages/login/Login';
 import Unauthorized from '../pages/noauthorized/Unauthorized';
 import PdfGuide from '../pages/support/PdfGuide';
 import Support from '../pages/support/Support';
+import Tests from '../pages/tests/Tests';
 import TextEditor from '../pages/texteditor/TextEditor';
 
 const routes = [
@@ -24,6 +25,15 @@ const routes = [
     isProtected: true,
     icon: BiPencil,
     title: 'Editor',
+    allowedRoles: ['ALL'],
+    showOnSidebar: true,
+  },
+  {
+    path: '/tests',
+    component: Tests,
+    isProtected: false,
+    icon: BiPencil,
+    title: 'Tests',
     allowedRoles: ['ALL'],
     showOnSidebar: true,
   },
