@@ -38,9 +38,16 @@ def analyze_file_with_freeling(file, id):
     if not os.path.exists(temporal_directory):
         os.makedirs(temporal_directory)
 
-    analyze_command = run_freeling_command.replace("input", file)
-    analyze_command = run_freeling_command.replace("output", f'{temporal_directory}/{id}.mrf')
+    print("\n\n=====================")
+    print(file)
+    print("=====================\n\n")
 
+    analyze_command = run_freeling_command.replace("input", file)
+    analyze_command = analyze_command.replace("output", f'{temporal_directory}/{id}.mrf')
+
+    print("\n\n=====================")
+    print(analyze_command)
+    print("=====================\n\n")
     run_bash_command(analyze_command)
     
     with open(f'{temporal_directory}/{id}.mrf', 'r') as file:
