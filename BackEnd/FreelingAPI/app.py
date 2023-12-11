@@ -1,11 +1,10 @@
 from flask import Flask, jsonify, request
 import subprocess
-
-print("Starting Freeling Server...")
+import uuid
 
 start_freeling_server_command = 'analyze -f es.cfg --server --port 50005 &'
 check_if_freeling_server_is_started_command = 'ps aux | grep freeling'
-run_freeling = 'analyzer_client 50005 '
+run_freeling_command = 'analyzer_client 50005 '
 
 app = Flask(__name__)
 
@@ -58,6 +57,27 @@ def analyze_file_with_freeling():
 
         return file_contents
     return 'No file uploaded.'
+
+@app.route('/create-file', methods=['POST'])
+def create_file():
+    if not request.is_json:
+        return jsonify({"message": "Request must be JSON"}), 400
+
+    data = request.get_json()
+    text = data.get('text')
+
+    if not text:
+        return jsonify({"message": "No text provided"}), 400
+
+    # Generate a unique file name
+    filename = f"temp/{uuid.uuid4()}.txt"
+
+    # Write the text to the file
+    with open(filename, 'w') as file:
+        file.write(text)
+
+    return jsonify({"message": "File created successfully", "filename": filename})
+
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=4000)
