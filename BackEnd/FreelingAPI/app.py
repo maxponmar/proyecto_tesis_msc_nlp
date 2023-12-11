@@ -24,21 +24,29 @@ def run_background_command(command):
     except Exception as e:
         return "An error occurred: " + str(e)
 
+def check_freeling_status():
+    result = run_bash_command(check_if_freeling_server_is_started_command)
+    if "freeling/config/es.cfg" in result:
+        return True
+    else:
+        return False
+
 @app.route('/startfreeling', methods=['GET'])
 def start_freeling():
-    result = run_background_command(start_freeling_server_command)
-    return result
+    try:
+        is_freeling_already_started = check_freeling_status()
+        if(is_freeling_already_started):
+            return jsonify({"status": "Already Started"})
+        run_background_command(start_freeling_server_command)
+        return jsonify({"status": "Successfully Started"})
+    except Exception as e:
+        return jsonify({"status": "Error ocurred: " + str(e)})
+
 
 @app.route('/healthcheck')
 def health_check():
-    result = run_bash_command(check_if_freeling_server_is_started_command)
-    print("\n==========")
-    print(result)
-    if "freeling/config/es.cfg" in result:
-        return jsonify({"status": "OK"})
-    else:
-        return jsonify({"status": "BAD"})
-    
+    is_freeling_ok = check_freeling_status()
+    return jsonify({"status": "OK"}) if is_freeling_ok else jsonify({"status": "BAD"})
 
 @app.route('/freeling', methods=['POST'])
 def analyze_file_with_freeling():
