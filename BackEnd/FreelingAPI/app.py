@@ -5,7 +5,7 @@ import os
 
 start_freeling_server_command = 'analyze -f es.cfg --server --port 50005 &'
 check_if_freeling_server_is_started_command = 'ps aux | grep freeling'
-run_freeling_command = 'analyzer_client 50005 '
+run_freeling_command = 'analyzer_client 50005 <input>output'
 
 app = Flask(__name__)
 
@@ -30,6 +30,21 @@ def check_freeling_status():
         return True
     else:
         return False
+    
+def analyze_file_with_freeling(file, id):
+    temporal_directory = "temp"
+
+    # Check if the temporal directory exists, creat it if not
+    if not os.path.exists(temporal_directory):
+        os.makedirs(temporal_directory)
+
+    analyze_command = run_freeling_command.replace("input", file)
+    analyze_command = run_freeling_command.replace("output", f'{temporal_directory}/{id}.mrf')
+
+    run_bash_command(analyze_command)
+    
+    with open(f'{temporal_directory}/{id}.mrf', 'r') as file:
+        return file.read()
 
 @app.route('/startfreeling', methods=['GET'])
 def start_freeling():
@@ -48,18 +63,8 @@ def health_check():
     is_freeling_ok = check_freeling_status()
     return jsonify({"status": "OK"}) if is_freeling_ok else jsonify({"status": "BAD"})
 
+
 @app.route('/freeling', methods=['POST'])
-def analyze_file_with_freeling():
-    uploaded_file = request.files['file']
-    if uploaded_file.filename != '':
-        file_contents = uploaded_file.read()
-        # Process the file_contents as needed
-        print(file_contents)
-
-        return file_contents
-    return 'No file uploaded.'
-
-@app.route('/create-file', methods=['POST'])
 def create_file():
     if not request.is_json:
         return jsonify({"message": "Request must be JSON"}), 400
@@ -77,13 +82,16 @@ def create_file():
         os.makedirs(temporal_directory)
 
     # Generate a unique file name
-    filename = os.path.join(temporal_directory, f"{uuid.uuid4()}.txt")
+    file_id = uuid.uuid4()
+    filename = os.path.join(temporal_directory, f"{file_id}.txt")
 
     # Write the text to the file
     with open(filename, 'w') as file:
         file.write(text)
 
-    return jsonify({"message": "File created successfully", "filename": filename})
+    # Analyze the file with freeling
+    analyzed_text = analyze_file_with_freeling(filename, file_id)
+    return jsonify({"message": "Text analyzed successfully", "result": analyzed_text})
 
 
 if __name__ == '__main__':
