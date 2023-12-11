@@ -16,10 +16,18 @@ def run_bash_command(command):
     except subprocess.CalledProcessError as e:
         return "An error occurred: " + e.output.decode('utf-8')
 
+def run_background_command(command):
+    try:
+        # Running the command without capturing output
+        subprocess.Popen(command, shell=True)
+        return "Command executed successfully"
+    except Exception as e:
+        return "An error occurred: " + str(e)
+
 @app.route('/startfreeling', methods=['GET'])
 def start_freeling():
-    result = run_bash_command(start_freeling_server_command)
-    return jsonify({"output": result})
+    result = run_background_command(start_freeling_server_command)
+    return result
 
 @app.route('/healthcheck')
 def health_check():
