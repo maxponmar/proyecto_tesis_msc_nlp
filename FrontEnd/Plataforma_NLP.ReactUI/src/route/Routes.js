@@ -4,9 +4,10 @@ import 'react-quill/dist/quill.snow.css';
 import Home from '../pages/home/Home';
 import Login from '../pages/login/Login';
 import Unauthorized from '../pages/noauthorized/Unauthorized';
+import SimpleEditor from '../pages/simpletexteditor/SimpleEditor';
+import Tests from '../pages/simpletexteditor/Tests';
 import PdfGuide from '../pages/support/PdfGuide';
 import Support from '../pages/support/Support';
-import Tests from '../pages/tests/Tests';
 import TextEditor from '../pages/texteditor/TextEditor';
 
 const routes = [
@@ -22,7 +23,7 @@ const routes = [
   {
     path: '/texteditor',
     component: TextEditor,
-    isProtected: true,
+    isProtected: false,
     icon: BiPencil,
     title: 'Editor',
     allowedRoles: ['ALL'],
@@ -34,6 +35,15 @@ const routes = [
     isProtected: false,
     icon: BiPencil,
     title: 'Tests',
+    allowedRoles: ['ALL'],
+    showOnSidebar: true,
+  },
+  {
+    path: '/simpleeditor',
+    component: SimpleEditor,
+    isProtected: false,
+    icon: BiPencil,
+    title: 'Simple Editor',
     allowedRoles: ['ALL'],
     showOnSidebar: true,
   },

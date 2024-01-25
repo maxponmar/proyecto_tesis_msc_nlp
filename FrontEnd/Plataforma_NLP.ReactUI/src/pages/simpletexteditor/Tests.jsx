@@ -48,6 +48,7 @@ export default function Tests() {
     console.log(parts);
     return parts
       .map((part) => {
+        if(part === ' ') return " ."
         const lowerPart = part.toLowerCase();
         if (/\w+/.test(part) && dictionary[lowerPart]) {
           if (dictionary[lowerPart].isStopWord) {
@@ -78,11 +79,12 @@ export default function Tests() {
       // console.log(editor.getHTML());
       // console.log(editor.getText());
       const dictionary = createWordDictionary(editor.getText());
-      console.log(dictionary);
+      // console.log(dictionary);
       const highlightedText = highlightText(editor.getText(), dictionary);
-      setContent(highlightedText);
       console.log(highlightedText);
+      setContent(highlightedText);
       editor.commands.setContent(highlightedText);
+      // editor.commands.insertContent(' ');
     },
   });
 
