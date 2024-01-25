@@ -1,8 +1,10 @@
 import { Auth0Provider } from '@auth0/auth0-react';
+import { ApiProvider } from '@reduxjs/toolkit/dist/query/react';
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { HashRouter } from 'react-router-dom';
 import App from './App';
+import { defaultApi } from './api/defaultApi';
 import './index.css';
 
 ReactDOM.createRoot(document.getElementById('root')).render(
@@ -14,9 +16,11 @@ ReactDOM.createRoot(document.getElementById('root')).render(
         redirect_uri: window.location.origin,
       }}
     >
-      <HashRouter>
-        <App />
-      </HashRouter>
+      <ApiProvider api={defaultApi}>
+        <HashRouter>
+          <App />
+        </HashRouter>
+      </ApiProvider>
     </Auth0Provider>
   </React.StrictMode>,
 );
