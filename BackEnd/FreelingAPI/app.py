@@ -132,7 +132,7 @@ def create_file():
 
 
 
-    return jsonify({"message": "Text analyzed successfully", "result": analyzed_text})
+    return jsonify({"message": "Text analyzed successfully", "result": analyzed_text, "wordGroups": word_groups})
 
 
 if __name__ == '__main__':
