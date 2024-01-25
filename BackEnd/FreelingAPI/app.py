@@ -38,16 +38,9 @@ def analyze_file_with_freeling(file, id):
     if not os.path.exists(temporal_directory):
         os.makedirs(temporal_directory)
 
-    print("\n\n=====================")
-    print(file)
-    print("=====================\n\n")
-
     analyze_command = run_freeling_command.replace("input", file)
     analyze_command = analyze_command.replace("output", f'{temporal_directory}/{id}.mrf')
 
-    print("\n\n=====================")
-    print(analyze_command)
-    print("=====================\n\n")
     run_bash_command(analyze_command)
     
     with open(f'{temporal_directory}/{id}.mrf', 'r') as file:
@@ -98,6 +91,12 @@ def create_file():
 
     # Analyze the file with freeling
     analyzed_text = analyze_file_with_freeling(filename, file_id)
+
+    # Delete the file
+    freelingFilename = os.path.join(temporal_directory, f"{file_id}.mrf")
+    os.remove(filename)
+    os.remove(freelingFilename)
+
     return jsonify({"message": "Text analyzed successfully", "result": analyzed_text})
 
 
