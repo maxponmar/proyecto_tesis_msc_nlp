@@ -1,5 +1,5 @@
 {
-  "apiurl": "http://localhost:8084/api",
+  "apiurl": "http://66.94.124.10:4000",
   "appTitle": "Plataforma NLP - ITN",
   "appHeader": "Plataforma NLP - ITN",
   "developerName": "Maximiliano Ponce Marquez",
