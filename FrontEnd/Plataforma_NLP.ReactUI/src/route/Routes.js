@@ -8,7 +8,6 @@ import SimpleEditor from '../pages/simpletexteditor/SimpleEditor';
 import Tests from '../pages/simpletexteditor/Tests';
 import PdfGuide from '../pages/support/PdfGuide';
 import Support from '../pages/support/Support';
-import TextEditor from '../pages/texteditor/TextEditor';
 
 const routes = [
   {
@@ -22,7 +21,7 @@ const routes = [
   },
   {
     path: '/texteditor',
-    component: TextEditor,
+    component: SimpleEditor,
     isProtected: false,
     icon: BiPencil,
     title: 'Editor',
