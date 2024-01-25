@@ -1,5 +1,5 @@
 import { FormControl, InputLabel, MenuItem, Select } from '@mui/material';
-import { analyseOptionParameters } from './Options';
+import { analyseOptionParameters } from '../functions/Options';
 
 export default function AnalysisSelector({ selectedOption, setSelectedOption }) {
   const handleChange = (event) => {

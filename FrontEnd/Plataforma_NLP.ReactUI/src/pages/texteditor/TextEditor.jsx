@@ -1,9 +1,9 @@
 import { useEffect, useRef, useState } from 'react';
 import ReactQuill from 'react-quill';
 import { useDebounce } from 'use-debounce';
-import AnalysisResults from './components/AnalysisResults';
-import AnalysisSelector from './components/AnalysisSelector';
-import { editorHeaderModules } from './components/Options';
+import AnalysisResults from '../simpletexteditor/components/AnalysisResults';
+import AnalysisSelector from '../simpletexteditor/components/AnalysisSelector';
+import { editorHeaderModules } from '../simpletexteditor/functions/Options';
 import AnalyzeText from './functions/AnalyzeText';
 import HighLightCommonWords from './functions/HighlightCommonWords';
 
