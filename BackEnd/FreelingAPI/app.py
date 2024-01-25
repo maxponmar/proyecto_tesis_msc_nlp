@@ -77,7 +77,7 @@ def create_file():
         return jsonify({"message": "Request must be JSON"}), 400
 
     data = request.get_json()
-    text = data.get('text')
+    text = data.get('text').lower()
 
     if not text:
         return jsonify({"message": "No text provided"}), 400
