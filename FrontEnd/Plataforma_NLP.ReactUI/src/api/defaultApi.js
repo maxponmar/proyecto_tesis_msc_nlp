@@ -6,6 +6,14 @@ export const defaultApi = createApi({
   baseQuery: fetchBaseQuery({ baseUrl: server.apiurl }),
   tagTypes: ['default'],
   endpoints: (builder) => ({
+    getFreelingResults: builder.query({
+      query: (text) => ({
+        url: "freeling",
+        method: 'POST',
+        body: text
+      }),
+      invalidatesTags: ['default'],
+    }),
     exampleQuery: builder.query({
       query: ({ token }) => {
         return {
@@ -33,4 +41,4 @@ export const defaultApi = createApi({
   }),
 });
 
-export const { useExampleQueryQuery, useExampleMutationMutation } = defaultApi;
+export const { useLazyGetFreelingResultsQuery } = defaultApi;
