@@ -97,6 +97,20 @@ def create_file():
     os.remove(filename)
     os.remove(freelingFilename)
 
+    lines = analyzed_text.split('\n')
+
+    # Split each line by empty space and get the first and second elements
+    word_info = []
+
+    for line in lines:
+        elements = line.split()
+        if len(elements) >= 2:
+            raw_word = elements[0]
+            base_word = elements[1]
+            word_info.append({"rawWord": raw_word, "baseWord": base_word})
+
+    print(word_info)
+
     return jsonify({"message": "Text analyzed successfully", "result": analyzed_text})
 
 
