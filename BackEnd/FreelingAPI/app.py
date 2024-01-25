@@ -97,19 +97,40 @@ def create_file():
     os.remove(filename)
     os.remove(freelingFilename)
 
+    # lines = analyzed_text.split('\n')
+    # # Split each line by empty space and get the first and second elements
+    # word_info = []
+    # for line in lines:
+    #     elements = line.split()
+    #     if len(elements) >= 2:
+    #         raw_word = elements[0]
+    #         base_word = elements[1]
+    #         word_info.append({"rawWord": raw_word, "baseWord": base_word})
+    # print(word_info)
+
+    # Split the text by line break (\n) to get lines
     lines = analyzed_text.split('\n')
 
-    # Split each line by empty space and get the first and second elements
-    word_info = []
+    # Create a dictionary to store raw words grouped by base words
+    word_groups = {}
 
     for line in lines:
         elements = line.split()
         if len(elements) >= 2:
             raw_word = elements[0]
             base_word = elements[1]
-            word_info.append({"rawWord": raw_word, "baseWord": base_word})
+            if base_word in word_groups:
+                word_groups[base_word].append(raw_word)
+            else:
+                word_groups[base_word] = [raw_word]
 
-    print(word_info)
+    # Print the grouped words
+    for base_word, raw_words in word_groups.items():
+        print(f"Base Word: {base_word}")
+        print(f"Raw Words: {', '.join(raw_words)}\n")
+
+
+
 
     return jsonify({"message": "Text analyzed successfully", "result": analyzed_text})
 
