@@ -141,9 +141,9 @@ def create_file():
                 word_groups[base_word] = [raw_word]
 
     # Print the grouped words
-    for base_word, raw_words in word_groups.items():
-        print(f"Base Word: {base_word}")
-        print(f"Raw Words: {', '.join(raw_words)}\n")
+    # for base_word, raw_words in word_groups.items():
+    #     print(f"Base Word: {base_word}")
+    #     print(f"Raw Words: {', '.join(raw_words)}\n")
 
     return jsonify(
         {
