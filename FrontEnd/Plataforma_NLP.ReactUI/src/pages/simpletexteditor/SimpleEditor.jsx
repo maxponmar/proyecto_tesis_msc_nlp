@@ -3,7 +3,7 @@ import { useDebounce } from 'use-debounce';
 import { useLazyGetFreelingResultsQuery } from '../../api/defaultApi';
 import AnalysisResults from './components/AnalysisResults';
 import AnalysisSelector from './components/AnalysisSelector';
-import { addDataToDataBase, openDataBase } from './functions/indexDb';
+import { addDataToDataBase, eliminarPalabrasRelacionadasDelTexto, openDataBase } from './functions/indexDb';
 import { analyzeText, createWordDictionary } from './functions/processingText';
 
 function SimpleEditor() {
@@ -23,21 +23,44 @@ function SimpleEditor() {
     useEffect(() => {
         if (debouncedInput.length === 0) return;
 
-        // Freeling
-        getFreelingAnalysis({ text: debouncedInput });
+        let filteredText = "";
+        openDataBase((db) => {
+            eliminarPalabrasRelacionadasDelTexto(db, userInput, function (filteredText) {
+                // Freeling
+                if (filteredText.length === 0) {
+                    console.log("No hay palabras nuevas");
+                    const dictionary = createWordDictionary(debouncedInput);
+                    const highlightedText = analyzeText(debouncedInput, dictionary);
+                    setResult(highlightedText);
+                } else {
+                    console.warn("Palabras nuevas: " + filteredText)
+                    getFreelingAnalysis({ text: filteredText });
+                }
+            });
+        });
 
-        const dictionary = createWordDictionary(userInput);
-        const highlightedText = analyzeText(userInput, dictionary);
-        setResult(highlightedText);
+
+
     }, [debouncedInput]);
 
     useEffect(() => {
         if (freelingStatus.isSuccess) {
-            console.log(freelingStatus.data?.wordGroups);
-
+            console.log("se econtro data de freeling")
             openDataBase((db) => {
                 addDataToDataBase(db, freelingStatus.data?.wordGroups);
             });
+
+            let filteredText = "";
+            openDataBase((db) => {
+                eliminarPalabrasRelacionadasDelTexto(db, userInput, function (filteredText) {
+                    if (filteredText.length === 0) return;
+                    const dictionary = createWordDictionary(filteredText);
+                    const highlightedText = analyzeText(filteredText, dictionary);
+                    setResult(highlightedText);
+                });
+            });
+
+
         }
     }, [freelingStatus])
 
