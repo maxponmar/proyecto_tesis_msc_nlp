@@ -1,10 +1,15 @@
 import React, { useEffect, useState } from 'react';
+import { useDebounce } from 'use-debounce';
 import { useLazyGetFreelingResultsQuery } from '../../api/defaultApi';
 import AnalysisResults from './components/AnalysisResults';
 import AnalysisSelector from './components/AnalysisSelector';
+import { addDataToDataBase, openDataBase } from './functions/indexDb';
 import { analyzeText, createWordDictionary } from './functions/processingText';
 
 function SimpleEditor() {
+    const [userInput, setUserInput] = useState("");
+    const [debouncedInput] = useDebounce(userInput, 1000);
+
     const [result, setResult] = useState(null);
     const [getFreelingAnalysis, freelingStatus] = useLazyGetFreelingResultsQuery();
 
@@ -15,19 +20,31 @@ function SimpleEditor() {
         variety: { LSL: 0, USL: 0 },
     });
 
-    const handleChange = (event) => {
-        const text = event.target.value;
-        const dictionary = createWordDictionary(text);
-        const highlightedText = analyzeText(text, dictionary);
-        setResult(highlightedText);
-    };
+    useEffect(() => {
+        if (debouncedInput.length === 0) return;
 
-    useEffect(() => { console.log(freelingStatus) }, [freelingStatus]);
+        // Freeling
+        getFreelingAnalysis({ text: debouncedInput });
+
+        const dictionary = createWordDictionary(userInput);
+        const highlightedText = analyzeText(userInput, dictionary);
+        setResult(highlightedText);
+    }, [debouncedInput]);
+
+    useEffect(() => {
+        if (freelingStatus.isSuccess) {
+            console.log(freelingStatus.data?.wordGroups);
+
+            openDataBase((db) => {
+                addDataToDataBase(db, freelingStatus.data?.wordGroups);
+            });
+        }
+    }, [freelingStatus])
 
     return (
         <div className="flex h-[calc(100vh-210px)] m-10">
             <div className="flex flex-col flex-grow">
-                <textarea onChange={handleChange} className='flex-1 resize-none' />
+                <textarea onChange={(e) => { setUserInput(e.target.value) }} className='flex-1 resize-none' />
                 <div className='flex-1 mt-2'>
                     {result ? <p>{result.highlightedText}</p> : null}
                 </div>
