@@ -83,18 +83,18 @@ export function analyzeText(text, dictionary) {
     ]
 
     const highlightedText = textParts
-        .map((part) => {
-            if (part === ' ') return <span>&nbsp;</span>
+        .map((part, index) => {
+            if (part === ' ') return <span key={index}>&nbsp;</span>
             const lowerPart = part.toLowerCase();
             if (/\w+/.test(part) && dictionary[lowerPart]) {
                 if (dictionary[lowerPart].isStopWord) {
-                    return <span>{part}</span>;
+                    return <span key={index}>{part}</span>;
                 } else if (dictionary[lowerPart].isCommonWord) {
-                    return <span className='font-bold bg-yellow-400'>{part}</span>;
+                    return <span key={index} className='font-bold bg-yellow-400'>{part}</span>;
                 } else if (dictionary[lowerPart].isRepeatedWord) {
-                    return <span className='text-red-500'>{part}</span>;
+                    return <span key={index} className='text-red-500'>{part}</span>;
                 } else {
-                    return <span>{part}</span>;
+                    return <span key={index}>{part}</span>;
                 }
             }
             return <span>{part}</span>;
