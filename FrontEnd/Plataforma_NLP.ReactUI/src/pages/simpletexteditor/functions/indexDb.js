@@ -58,3 +58,51 @@ export function addDataToDataBase(db, datos) {
         console.error("Error al agregar datos:", event.target.error);
     };
 }
+
+export function eliminarPalabrasRelacionadasDelTexto(db, texto, callback) {
+    const transaction = db.transaction(["tablaPalabras"], "readonly");
+    const store = transaction.objectStore("tablaPalabras");
+
+    const palabrasEnTexto = texto.split(/\s+/); // Dividir el texto en palabras
+
+    const palabrasRelacionadasEnDB = new Set(); // Conjunto para almacenar palabras relacionadas en la base de datos
+
+    palabrasEnTexto.forEach(palabra => {
+        // Buscar la palabra en la base de datos
+        const request = store.openCursor();
+
+        request.onsuccess = function (event) {
+            const cursor = event.target.result;
+
+            if (cursor) {
+                const data = cursor.value;
+
+                if (data.palabrasRelacionadas.includes(palabra)) {
+                    // Agregar la palabra relacionada de la base de datos al conjunto
+                    palabrasRelacionadasEnDB.add(palabra);
+                }
+
+                cursor.continue();
+            }
+        };
+
+        request.onerror = function (event) {
+            console.error("Error al buscar palabras relacionadas:", event.target.error);
+        };
+    });
+
+    transaction.oncomplete = function () {
+        // Filtrar las palabras en el texto para eliminar las que están en palabrasRelacionadasEnDB
+        const palabrasFiltradas = palabrasEnTexto.filter(palabra => !palabrasRelacionadasEnDB.has(palabra));
+
+        // Reconstruir el texto con las palabras filtradas
+        const textoFiltrado = palabrasFiltradas.join(" ");
+
+        // Llamar al callback con el texto filtrado
+        callback(textoFiltrado);
+    };
+
+    transaction.onerror = function (event) {
+        console.error("Error al consultar la base de datos:", event.target.error);
+    };
+}
