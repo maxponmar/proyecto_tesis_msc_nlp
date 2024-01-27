@@ -106,3 +106,40 @@ export function eliminarPalabrasRelacionadasDelTexto(db, texto, callback) {
         console.error("Error al consultar la base de datos:", event.target.error);
     };
 }
+
+export function buscarPalabraBase(db, palabraABuscar, callback) {
+    const transaction = db.transaction(["tablaPalabras"], "readonly");
+    const store = transaction.objectStore("tablaPalabras");
+
+    const request = store.openCursor();
+    let palabraBaseEncontrada = false;
+
+    request.onsuccess = function (event) {
+        if (palabraBaseEncontrada) {
+            // Si ya encontramos la palabra base, no hacemos nada más
+            return;
+        }
+
+        const cursor = event.target.result;
+
+        if (cursor) {
+            const data = cursor.value;
+
+            if (data.palabrasRelacionadas.includes(palabraABuscar)) {
+                // Si encontramos la palabra en palabrasRelacionadas, esta es la palabra base
+                callback(data.palabra);
+                palabraBaseEncontrada = true; // Establecemos la variable para evitar ejecutar más veces
+            }
+
+            cursor.continue();
+        } else if (!palabraBaseEncontrada) {
+            // Si no se encuentra ninguna coincidencia y no se ha encontrado la palabra base, informamos que no se encontró
+            callback(null);
+        }
+    };
+
+    request.onerror = function (event) {
+        console.error("Error al buscar palabra base:", event.target.error);
+        callback(null);
+    };
+}
