@@ -33,7 +33,7 @@ function SimpleEditor() {
                     const highlightedText = analyzeText(debouncedInput, dictionary);
                     setResult(highlightedText);
                 } else {
-                    console.warn("Palabras nuevas: " + filteredText)
+                    console.log("Palabras nuevas: " + filteredText)
                     getFreelingAnalysis({ text: filteredText });
                 }
             });
@@ -45,7 +45,13 @@ function SimpleEditor() {
 
     useEffect(() => {
         if (freelingStatus.isSuccess) {
-            if (freelingStatus.data?.wordGroups === undefined || freelingStatus.data?.wordGroups.length === undefined) return;
+
+            if (freelingStatus.data?.wordGroups === undefined) {
+                console.log("No se encontro data de freeling");
+                console.log(freelingStatus.data);
+                return;
+            };
+
             console.log("se econtro data de freeling: " + freelingStatus.data?.wordGroups.length + " palabras")
             openDataBase((db) => {
                 addDataToDataBase(db, freelingStatus.data?.wordGroups);
