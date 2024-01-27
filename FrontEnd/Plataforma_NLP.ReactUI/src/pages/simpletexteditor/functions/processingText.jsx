@@ -1,5 +1,6 @@
 import commonWordsFromFile from '../../../assets/lexical/commonwords.json';
 import stopWordsFromFile from '../../../assets/lexical/stopwords.json';
+import { buscarPalabraBase, openDataBase } from './indexDb';
 
 export function createWordDictionary(text) {
     const commonWords = new Set(commonWordsFromFile);
@@ -13,18 +14,26 @@ export function createWordDictionary(text) {
 
     // Count occurrences of each word
     words.forEach((word) => {
-        wordCounts[word] = (wordCounts[word] || 0) + 1;
+        openDataBase((db) => {
+            buscarPalabraBase(db, word, function (palabraBase) {
+                wordCounts[palabraBase] = (wordCounts[palabraBase] || 0) + 1;
+            });
+        });
     });
 
     // Create the dictionary
     words.forEach((word) => {
         if (!wordDictionary[word]) {
-            wordDictionary[word] = {
-                baseWord: word,
-                isCommonWord: commonWords.has(word),
-                isStopWord: stopWords.has(word),
-                isRepeatedWord: wordCounts[word] > 1,
-            };
+            openDataBase((db) => {
+                buscarPalabraBase(db, word, function (palabraBase) {
+                    wordDictionary[word] = {
+                        baseWord: palabraBase,
+                        isCommonWord: commonWords.has(word),
+                        isStopWord: stopWords.has(word),
+                        isRepeatedWord: wordCounts[word] > 1,
+                    };
+                });
+            });
         }
     });
 
@@ -32,6 +41,8 @@ export function createWordDictionary(text) {
 }
 
 export function analyzeText(text, dictionary) {
+    console.log(dictionary)
+
     // Split text into words and non-word characters (like spaces, punctuation)
     const textParts = text.match(/\w+|\W+/g);
     const cleanText = text.match(/\b(\w+)\b/g)
@@ -55,7 +66,6 @@ export function analyzeText(text, dictionary) {
     });
 
     // console.log(commonWords)
-    console.log(dictionary)
 
     const N = cleanText.length;
     const Nlex = nonStopWords.length;

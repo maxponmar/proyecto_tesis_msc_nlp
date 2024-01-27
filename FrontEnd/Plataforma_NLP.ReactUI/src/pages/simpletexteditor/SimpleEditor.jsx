@@ -3,7 +3,7 @@ import { useDebounce } from 'use-debounce';
 import { useLazyGetFreelingResultsQuery } from '../../api/defaultApi';
 import AnalysisResults from './components/AnalysisResults';
 import AnalysisSelector from './components/AnalysisSelector';
-import { addDataToDataBase, eliminarPalabrasRelacionadasDelTexto, openDataBase } from './functions/indexDb';
+import { addDataToDataBase, buscarPalabraBase, eliminarPalabrasRelacionadasDelTexto, openDataBase } from './functions/indexDb';
 import { analyzeText, createWordDictionary } from './functions/processingText';
 
 function SimpleEditor() {
@@ -45,7 +45,8 @@ function SimpleEditor() {
 
     useEffect(() => {
         if (freelingStatus.isSuccess) {
-            console.log("se econtro data de freeling")
+            if (freelingStatus.data?.wordGroups === undefined || freelingStatus.data?.wordGroups.length === undefined) return;
+            console.log("se econtro data de freeling: " + freelingStatus.data?.wordGroups.length + " palabras")
             openDataBase((db) => {
                 addDataToDataBase(db, freelingStatus.data?.wordGroups);
             });
@@ -59,8 +60,6 @@ function SimpleEditor() {
                     setResult(highlightedText);
                 });
             });
-
-
         }
     }, [freelingStatus])
 
@@ -72,9 +71,20 @@ function SimpleEditor() {
                     {result ? <p>{result.highlightedText}</p> : null}
                 </div>
                 <button className='px-4 py-2 rounded bg-blue-400 text-black' onClick={() => {
-                    getFreelingAnalysis({ text: "hola esta es una prueba de freeling" });
+                    openDataBase((db) => {
+                        const palabraABuscar = "gas";
 
-                }}>Freeling</button>
+                        buscarPalabraBase(db, palabraABuscar, function (palabraBase) {
+                            console.log(palabraBase);
+                            // if (palabraBase) {
+                            //     console.log(`La palabra base de "${palabraABuscar}" es "${palabraBase}".`);
+                            // } else {
+                            //     console.log(`No se encontró una palabra base para "${palabraABuscar}".`);
+                            // }
+                        });
+                    });
+
+                }}>Test Button</button>
             </div>
             <div className="flex flex-col flex-basis[300px] flex-shrink-0 ml-5">
                 <AnalysisSelector selectedOption={selectedOption} setSelectedOption={setSelectedOption} />
