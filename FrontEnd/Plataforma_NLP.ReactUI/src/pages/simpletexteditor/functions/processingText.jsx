@@ -1,103 +1,163 @@
-import commonWordsFromFile from '../../../assets/lexical/commonwords.json';
-import stopWordsFromFile from '../../../assets/lexical/stopwords.json';
+import commonWordsFromFile from "../../../assets/lexical/commonwords.json";
+import stopWordsFromFile from "../../../assets/lexical/stopwords.json";
+import { buscarPalabraBase, openDataBase } from "./indexDb";
 
-export function createWordDictionary(text) {
-    const commonWords = new Set(commonWordsFromFile);
-    const stopWords = new Set(stopWordsFromFile);
+export function createWordDictionary(db, text, callback) {
+  const commonWords = new Set(commonWordsFromFile);
+  const stopWords = new Set(stopWordsFromFile);
 
-    const wordCounts = {};
-    const wordDictionary = {};
+  const wordDictionary = {};
 
-    // Split text into words using a regular expression
-    const words = text.toLowerCase().match(/\b(\w+)\b/g);
+  // Split text into words using a regular expression
+  const words = text.toLowerCase().match(/\b(\w+)\b/g);
 
-    // Count occurrences of each word
-    words.forEach((word) => {
-        wordCounts[word] = (wordCounts[word] || 0) + 1;
+  const wordCounts = {};
+
+  // Función para buscar la palabra base y contar las ocurrencias
+  function buscarYContarPalabraBase(db, word, callback) {
+    buscarPalabraBase(db, word, function (palabraBase) {
+      if (palabraBase) {
+        wordCounts[palabraBase] = (wordCounts[palabraBase] || 0) + 1;
+      }
+      console.log(wordCounts);
     });
+  }
 
-    // Create the dictionary
+  // Función principal para contar palabras
+  function contarPalabras(callback) {
+    const palabrasProcesadas = 0;
+
     words.forEach((word) => {
-        if (!wordDictionary[word]) {
-            wordDictionary[word] = {
-                baseWord: word,
-                isCommonWord: commonWords.has(word),
-                isStopWord: stopWords.has(word),
-                isRepeatedWord: wordCounts[word] > 1,
-            };
+      buscarYContarPalabraBase(db, word, function () {
+        palabrasProcesadas++;
+        if (palabrasProcesadas === words.length) {
+          // Todas las palabras se han procesado, ejecutar el callback
+          callback();
         }
+      });
     });
+  }
 
-    return wordDictionary;
+  // Llamar a contarPalabras y luego mostrarResultados cuando se haya completado
+  contarPalabras(mostrarResultados);
+
+  // // Count occurrences of each word
+  // words.forEach((word) => {
+
+  //     function buscarYContarPalabraBase(db, word, callback) {
+  //         buscarPalabraBase(db, word, function (palabraBase) {
+  //             if (palabraBase) {
+  //                 wordCounts[palabraBase] = (wordCounts[palabraBase] || 0) + 1;
+  //             }
+  //             callback();
+  //         });
+  //     }
+
+  //     buscarPalabraBase(db, word, palabraBase => {
+  //         wordCounts[palabraBase] = (wordCounts[palabraBase] || 0) + 1;
+  //     });
+  //     console.log(wordCounts)
+  // });
+
+  // Create the dictionary
+  words.forEach((word) => {
+    if (!wordDictionary[word]) {
+      openDataBase((db) => {
+        buscarPalabraBase(db, word, function (palabraBase) {
+          wordDictionary[word] = {
+            baseWord: palabraBase,
+            isCommonWord: commonWords.has(word),
+            isStopWord: stopWords.has(word),
+            isRepeatedWord: wordCounts[word] > 1,
+          };
+        });
+      });
+    }
+  });
+
+  return wordDictionary;
 }
 
 export function analyzeText(text, dictionary) {
-    // Split text into words and non-word characters (like spaces, punctuation)
-    const textParts = text.match(/\w+|\W+/g);
-    const cleanText = text.match(/\b(\w+)\b/g)
+  console.log(dictionary);
 
-    const nonStopWords = cleanText.filter(word => {
-        const lowerWord = word.toLowerCase();
-        return dictionary[lowerWord] && !dictionary[lowerWord].isStopWord;
-    });
+  // Split text into words and non-word characters (like spaces, punctuation)
+  const textParts = text.match(/\w+|\W+/g);
+  const cleanText = text.match(/\b(\w+)\b/g);
 
-    const uniqueWords = new Set(nonStopWords);
+  const nonStopWords = cleanText.filter((word) => {
+    const lowerWord = word.toLowerCase();
+    return dictionary[lowerWord] && !dictionary[lowerWord].isStopWord;
+  });
 
-    // TODO: Deben ser unicas?
-    const commonWords = nonStopWords.filter(word => {
-        const lowerWord = word.toLowerCase();
-        return dictionary[lowerWord] && dictionary[lowerWord].isCommonWord;
-    });
+  const uniqueWords = new Set(nonStopWords);
 
-    const repeatedWords = nonStopWords.filter(word => {
-        const lowerWord = word.toLowerCase();
-        return dictionary[lowerWord] && dictionary[lowerWord].isRepeatedWord;
-    });
+  // TODO: Deben ser unicas?
+  const commonWords = nonStopWords.filter((word) => {
+    const lowerWord = word.toLowerCase();
+    return dictionary[lowerWord] && dictionary[lowerWord].isCommonWord;
+  });
 
-    // console.log(commonWords)
-    console.log(dictionary)
+  const repeatedWords = nonStopWords.filter((word) => {
+    const lowerWord = word.toLowerCase();
+    return dictionary[lowerWord] && dictionary[lowerWord].isRepeatedWord;
+  });
 
-    const N = cleanText.length;
-    const Nlex = nonStopWords.length;
-    const Tlex = uniqueWords.size;
-    const Nslex = Nlex - commonWords.length;
+  // console.log(commonWords)
 
-    // console.log("N: " + N)
-    // console.log("Nlex: " + Nlex)
-    // console.log("Tlex: " + Tlex)
-    // console.log("Nslex: " + Nslex)
+  const N = cleanText.length;
+  const Nlex = nonStopWords.length;
+  const Tlex = uniqueWords.size;
+  const Nslex = Nlex - commonWords.length;
 
-    const scores = [
-        {
-            name: 'Variedad',
-            score: Tlex / Nlex,
-        },
-        {
-            name: 'Densidad',
-            score: Tlex / N,
-        },
-        {
-            name: 'Sofisticación',
-            score: Nslex / Nlex,
-        },
-    ]
+  // console.log("N: " + N)
+  // console.log("Nlex: " + Nlex)
+  // console.log("Tlex: " + Tlex)
+  // console.log("Nslex: " + Nslex)
 
-    const highlightedText = textParts
-        .map((part) => {
-            if (part === ' ') return <span>&nbsp;</span>
-            const lowerPart = part.toLowerCase();
-            if (/\w+/.test(part) && dictionary[lowerPart]) {
-                if (dictionary[lowerPart].isStopWord) {
-                    return <span>{part}</span>;
-                } else if (dictionary[lowerPart].isCommonWord) {
-                    return <span className='font-bold bg-yellow-400'>{part}</span>;
-                } else if (dictionary[lowerPart].isRepeatedWord) {
-                    return <span className='text-red-500'>{part}</span>;
-                } else {
-                    return <span>{part}</span>;
-                }
-            }
-            return <span>{part}</span>;
-        })
-    return { scores, highlightedText, repeatedWords: repeatedWords.length, commonWords: commonWords.length }
+  const scores = [
+    {
+      name: "Variedad",
+      score: Tlex / Nlex,
+    },
+    {
+      name: "Densidad",
+      score: Tlex / N,
+    },
+    {
+      name: "Sofisticación",
+      score: Nslex / Nlex,
+    },
+  ];
+
+  const highlightedText = textParts.map((part, index) => {
+    if (part === " ") return <span key={index}>&nbsp;</span>;
+    const lowerPart = part.toLowerCase();
+    if (/\w+/.test(part) && dictionary[lowerPart]) {
+      if (dictionary[lowerPart].isStopWord) {
+        return <span key={index}>{part}</span>;
+      } else if (dictionary[lowerPart].isCommonWord) {
+        return (
+          <span key={index} className="font-bold bg-yellow-400">
+            {part}
+          </span>
+        );
+      } else if (dictionary[lowerPart].isRepeatedWord) {
+        return (
+          <span key={index} className="text-red-500">
+            {part}
+          </span>
+        );
+      } else {
+        return <span key={index}>{part}</span>;
+      }
+    }
+    return <span>{part}</span>;
+  });
+  return {
+    scores,
+    highlightedText,
+    repeatedWords: repeatedWords.length,
+    commonWords: commonWords.length,
+  };
 }

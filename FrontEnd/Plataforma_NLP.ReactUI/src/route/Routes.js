@@ -1,6 +1,7 @@
 import { AiFillHome } from 'react-icons/ai';
-import { BiLogIn, BiLogOut, BiPencil, BiSupport } from 'react-icons/bi';
+import { BiBookBookmark, BiLogIn, BiLogOut, BiPencil, BiSupport, BiTestTube } from 'react-icons/bi';
 import 'react-quill/dist/quill.snow.css';
+import FreelingApplication from '../pages/freeling/Freeling';
 import Home from '../pages/home/Home';
 import Login from '../pages/login/Login';
 import Unauthorized from '../pages/noauthorized/Unauthorized';
@@ -20,11 +21,20 @@ const routes = [
     showOnSidebar: true,
   },
   {
-    path: '/texteditor',
+    path: '/simpleeditor',
     component: SimpleEditor,
     isProtected: false,
     icon: BiPencil,
-    title: 'Editor',
+    title: 'Text Editor',
+    allowedRoles: ['ALL'],
+    showOnSidebar: true,
+  },
+  {
+    path: '/freeling',
+    component: FreelingApplication,
+    isProtected: false,
+    icon: BiBookBookmark,
+    title: 'FreeLing',
     allowedRoles: ['ALL'],
     showOnSidebar: true,
   },
@@ -32,17 +42,8 @@ const routes = [
     path: '/tests',
     component: Tests,
     isProtected: false,
-    icon: BiPencil,
+    icon: BiTestTube,
     title: 'Tests',
-    allowedRoles: ['ALL'],
-    showOnSidebar: true,
-  },
-  {
-    path: '/simpleeditor',
-    component: SimpleEditor,
-    isProtected: false,
-    icon: BiPencil,
-    title: 'Simple Editor',
     allowedRoles: ['ALL'],
     showOnSidebar: true,
   },
