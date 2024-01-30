@@ -148,6 +148,7 @@ def create_file():
     return jsonify(
         {
             "message": "Text analyzed successfully",
+            "original": text,
             "result": analyzed_text,
             "wordGroups": word_groups,
         }
