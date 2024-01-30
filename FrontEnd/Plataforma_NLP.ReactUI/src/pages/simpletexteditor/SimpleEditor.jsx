@@ -4,16 +4,18 @@ import { useLazyGetFreelingResultsQuery } from "../../api/defaultApi";
 import AnalysisResults from "./components/AnalysisResults";
 import AnalysisSelector from "./components/AnalysisSelector";
 import {
-  addDataToDataBase,
   buscarPalabraBase,
-  eliminarPalabrasRelacionadasDelTexto,
+  construirDiccionario,
+  eliminarPalabrasSecundarias,
   openDataBase,
+  saveWordGruopsToDB,
 } from "./functions/indexDb";
-import { analyzeText, createWordDictionary } from "./functions/processingText";
 
 function SimpleEditor() {
   const [userInput, setUserInput] = useState("");
   const [debouncedInput] = useDebounce(userInput, 1000);
+
+  const [textToAnalyze, setTextToAnalyze] = useState("");
 
   const [wordDictionary, setWordDictionary] = useState({});
   const [result, setResult] = useState(null);
@@ -27,64 +29,94 @@ function SimpleEditor() {
     variety: { LSL: 0, USL: 0 },
   });
 
+  const analyzeText = (text) => {};
+
   useEffect(() => {
+    // getFreelingAnalysis({ text: debouncedInput });
     if (debouncedInput.length === 0) return;
 
-    openDataBase((db) => {
-      eliminarPalabrasRelacionadasDelTexto(
-        db,
-        debouncedInput,
-        (filteredText) => {
-          // Freeling
-          if (filteredText.length === 0) {
-            console.log("No hay palabras nuevas");
+    eliminarPalabrasSecundarias(debouncedInput).then((filteredText) => {
+      if (filteredText.length === 0) {
+        console.log("No hay palabras nuevas");
+        setTextToAnalyze(debouncedInput);
+        return;
+      }
 
-            createWordDictionary(db, debouncedInput, (dictionary) => {
-              console.log("Se creo el diccionario");
-              console.log(dictionary);
-              const highlightedText = analyzeText(debouncedInput, dictionary);
-            });
-
-            setResult(highlightedText);
-          } else {
-            console.log("Palabras nuevas: " + filteredText);
-            getFreelingAnalysis({ text: filteredText });
-          }
-        }
-      );
+      // Buscar palabras nuevas con Freeling
+      getFreelingAnalysis({ text: filteredText });
     });
+
+    //   console.log("Palabras nuevas: " + filteredText);
+    //   // Buscar palabras nuevas con Freeling
+    //   getFreelingAnalysis({ text: filteredText });
+    // });
+
+    // openDataBase((db) => {
+    //   eliminarPalabrasRelacionadasDelTexto(
+    //     db,
+    //     debouncedInput,
+    //     (filteredText) => {
+    //       // Freeling
+    //       if (filteredText.length === 0) {
+    //         console.log("No hay palabras nuevas");
+
+    //         createWordDictionary(db, debouncedInput, (dictionary) => {
+    //           console.log("Se creo el diccionario");
+    //           console.log(dictionary);
+    //           const highlightedText = analyzeText(debouncedInput, dictionary);
+    //         });
+
+    //         setResult(highlightedText);
+    //       } else {
+    //         console.log("Palabras nuevas: " + filteredText);
+    //         getFreelingAnalysis({ text: filteredText });
+    //       }
+    //     }
+    //   );
+    // });
   }, [debouncedInput]);
 
   useEffect(() => {
     if (freelingStatus.isSuccess) {
       if (freelingStatus.data?.wordGroups === undefined) {
         console.log("No se encontro data de freeling");
-        console.log(freelingStatus.data);
         return;
       }
 
       console.log(
         "se econtro data de freeling: " +
-          freelingStatus.data?.wordGroups.length +
-          " palabras"
+          Object.keys(freelingStatus.data?.wordGroups).length +
+          " palabra/s"
       );
-      openDataBase((db) => {
-        addDataToDataBase(db, freelingStatus.data?.wordGroups);
-      });
 
-      let filteredText = "";
-      openDataBase((db) => {
-        eliminarPalabrasRelacionadasDelTexto(
-          db,
-          userInput,
-          function (filteredText) {
-            if (filteredText.length === 0) return;
-            createWordDictionary(filteredText, setWordDictionary);
-          }
-        );
-      });
+      saveWordGruopsToDB(freelingStatus.data?.wordGroups);
+
+      setTextToAnalyze(debouncedInput);
+      // openDataBase((db) => {
+      //   addDataToDataBase(db, freelingStatus.data?.wordGroups);
+      // });
+
+      // let filteredText = "";
+      // openDataBase((db) => {
+      //   eliminarPalabrasRelacionadasDelTexto(
+      //     db,
+      //     userInput,
+      //     function (filteredText) {
+      //       if (filteredText.length === 0) return;
+      //       createWordDictionary(filteredText, setWordDictionary);
+      //     }
+      //   );
+      // });
     }
   }, [freelingStatus]);
+
+  useEffect(() => {
+    if (textToAnalyze.length === 0) return;
+
+    construirDiccionario(textToAnalyze).then((diccionario) => {
+      console.log("Diccionario construido:", diccionario);
+    });
+  }, [textToAnalyze]);
 
   useEffect(() => {
     if (Object.keys(wordDictionary).length === 0) return;

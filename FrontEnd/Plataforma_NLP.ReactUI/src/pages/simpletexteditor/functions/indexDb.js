@@ -1,3 +1,226 @@
+const palabrasComunes = ["ejemplo", "este"];
+const stopwords = ["es", "un", "con", "y"];
+
+export function saveWordGruopsToDB(wordGroups) {
+  // Abre o crea la base de datos IndexDB
+  const request = indexedDB.open("miBaseDeDatos", 1);
+
+  request.onerror = function (event) {
+    console.error("Error al abrir la base de datos:", event.target.errorCode);
+  };
+
+  request.onupgradeneeded = function (event) {
+    const db = event.target.result;
+
+    // Crea un almacén de objetos (object store) llamado 'wordGroups'
+    const objectStore = db.createObjectStore("wordGroups", { keyPath: "base" });
+
+    // Define el índice 'baseIndex' para buscar por la palabra base
+    objectStore.createIndex("baseIndex", "base", { unique: true });
+  };
+
+  request.onsuccess = function (event) {
+    const db = event.target.result;
+
+    // Abre una transacción de lectura/escritura en el almacén 'wordGroups'
+    const transaction = db.transaction(["wordGroups"], "readwrite");
+
+    // Obtiene el almacén de objetos
+    const objectStore = transaction.objectStore("wordGroups");
+
+    for (const baseWord in wordGroups) {
+      const request = objectStore.get(baseWord);
+
+      request.onsuccess = function (event) {
+        const existingData = event.target.result;
+
+        if (existingData) {
+          // Si la palabra base existe, agrega las palabras secundarias nuevas y únicas
+          const existingWords = existingData.words;
+          const newWords = wordGroups[baseWord];
+
+          // Filtra las nuevas palabras secundarias para eliminar duplicados
+          const uniqueWords = [...new Set([...existingWords, ...newWords])];
+
+          // Actualiza los datos existentes en la base de datos
+          const updateRequest = objectStore.put({
+            base: baseWord,
+            words: uniqueWords,
+          });
+
+          updateRequest.onerror = function (event) {
+            console.error("Error al actualizar los datos:", event.target.error);
+          };
+        } else {
+          // Si no existe un objeto con esta clave, agrega los datos tal como están
+          const wordGroup = wordGroups[baseWord];
+          objectStore.add({ base: baseWord, words: wordGroup });
+        }
+      };
+    }
+  };
+}
+
+export async function eliminarPalabrasSecundarias(texto) {
+  try {
+    // Abre una conexión a la base de datos
+    const db = await new Promise((resolve, reject) => {
+      const request = indexedDB.open("miBaseDeDatos", 1);
+
+      request.onerror = function (event) {
+        console.error(
+          "Error al abrir la base de datos:",
+          event.target.errorCode
+        );
+        reject(event.target.error);
+      };
+
+      request.onsuccess = function (event) {
+        resolve(event.target.result);
+      };
+    });
+
+    // Abre una transacción de lectura en el almacén 'wordGroups'
+    const transaction = db.transaction(["wordGroups"], "readonly");
+
+    // Obtiene el almacén de objetos
+    const objectStore = transaction.objectStore("wordGroups");
+
+    // Obtiene todas las palabras secundarias de la base de datos
+    const palabrasSecundarias = await new Promise((resolve, reject) => {
+      const request = objectStore.getAll();
+
+      request.onsuccess = function (event) {
+        resolve(
+          event.target.result.reduce((result, data) => {
+            return result.concat(data.words);
+          }, [])
+        );
+      };
+
+      request.onerror = function (event) {
+        console.error(
+          "Error al acceder a la base de datos:",
+          event.target.error
+        );
+        reject(event.target.error);
+      };
+    });
+
+    // Divide el texto de entrada en palabras
+    const palabrasTexto = texto.split(" ");
+
+    // Filtra las palabras del texto que no están en la lista de palabras secundarias
+    const palabrasFiltradas = palabrasTexto.filter(
+      (palabra) => !palabrasSecundarias.includes(palabra)
+    );
+
+    // Construye el texto resultante
+    const textoResultado = palabrasFiltradas.join(" ");
+
+    // Cierra la transacción y la conexión a la base de datos
+    transaction.oncomplete = function () {
+      db.close();
+      if (textoResultado.length > 0)
+        console.log("Texto sin palabras secundarias:", textoResultado);
+    };
+
+    return textoResultado;
+  } catch (error) {
+    console.error("Ocurrió un error:", error);
+    throw error;
+  }
+}
+
+export async function construirDiccionario(texto) {
+  try {
+    const db = await new Promise((resolve, reject) => {
+      const request = indexedDB.open("miBaseDeDatos", 1);
+
+      request.onerror = function (event) {
+        console.error(
+          "Error al abrir la base de datos:",
+          event.target.errorCode
+        );
+        reject(event.target.error);
+      };
+
+      request.onsuccess = function (event) {
+        resolve(event.target.result);
+      };
+    });
+
+    const transaction = db.transaction(["wordGroups"], "readonly");
+    const objectStore = transaction.objectStore("wordGroups");
+
+    // Obtiene todas las palabras base y secundarias de la base de datos
+    const palabrasBaseYSecundarias = await new Promise((resolve, reject) => {
+      const request = objectStore.openCursor();
+
+      const palabras = [];
+
+      request.onsuccess = function (event) {
+        const cursor = event.target.result;
+        if (cursor) {
+          const data = cursor.value;
+          palabras.push(data.base, ...data.words);
+          cursor.continue();
+        } else {
+          resolve(palabras);
+        }
+      };
+
+      request.onerror = function (event) {
+        console.error(
+          "Error al acceder a la base de datos:",
+          event.target.error
+        );
+        reject(event.target.error);
+      };
+    });
+
+    // Divide el texto de entrada en palabras
+    const palabrasTexto = texto.split(" ");
+
+    // Define un objeto para almacenar el diccionario
+    const diccionario = {};
+
+    // Itera a través de las palabras del texto
+    for (const palabra of palabrasTexto) {
+      const palabraBase = palabrasBaseYSecundarias.find(
+        (base) => palabra === base
+      );
+
+      if (diccionario[palabraBase]) {
+        // La palabra base ya existe en el diccionario, incrementa su contador
+        diccionario[palabraBase].contador++;
+      } else {
+        // Agrega la palabra base al diccionario
+        const esComun = palabrasComunes.includes(palabraBase);
+        const esStopword = stopwords.includes(palabraBase);
+
+        diccionario[palabraBase] = {
+          palabraBase: palabraBase,
+          contador: 1,
+          esComun: esComun,
+          esStopword: esStopword,
+        };
+      }
+    }
+
+    // Cierra la transacción y la conexión a la base de datos
+    transaction.oncomplete = function () {
+      db.close();
+      console.log("Diccionario construido:", diccionario);
+    };
+
+    return diccionario;
+  } catch (error) {
+    console.error("Ocurrió un error:", error);
+    throw error;
+  }
+}
+
 export function openDataBase(callback) {
   const request = indexedDB.open("freelingDB", 1);
 
