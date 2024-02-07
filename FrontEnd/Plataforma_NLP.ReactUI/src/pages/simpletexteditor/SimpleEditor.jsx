@@ -32,7 +32,6 @@ function SimpleEditor() {
   const analyzeText = (text) => {};
 
   useEffect(() => {
-    // getFreelingAnalysis({ text: debouncedInput });
     if (debouncedInput.length === 0) return;
 
     eliminarPalabrasSecundarias(debouncedInput).then((filteredText) => {
@@ -45,35 +44,6 @@ function SimpleEditor() {
       // Buscar palabras nuevas con Freeling
       getFreelingAnalysis({ text: filteredText });
     });
-
-    //   console.log("Palabras nuevas: " + filteredText);
-    //   // Buscar palabras nuevas con Freeling
-    //   getFreelingAnalysis({ text: filteredText });
-    // });
-
-    // openDataBase((db) => {
-    //   eliminarPalabrasRelacionadasDelTexto(
-    //     db,
-    //     debouncedInput,
-    //     (filteredText) => {
-    //       // Freeling
-    //       if (filteredText.length === 0) {
-    //         console.log("No hay palabras nuevas");
-
-    //         createWordDictionary(db, debouncedInput, (dictionary) => {
-    //           console.log("Se creo el diccionario");
-    //           console.log(dictionary);
-    //           const highlightedText = analyzeText(debouncedInput, dictionary);
-    //         });
-
-    //         setResult(highlightedText);
-    //       } else {
-    //         console.log("Palabras nuevas: " + filteredText);
-    //         getFreelingAnalysis({ text: filteredText });
-    //       }
-    //     }
-    //   );
-    // });
   }, [debouncedInput]);
 
   useEffect(() => {
@@ -112,7 +82,7 @@ function SimpleEditor() {
 
   useEffect(() => {
     if (textToAnalyze.length === 0) return;
-
+    console.log("Texto para analizar:", textToAnalyze);
     construirDiccionario(textToAnalyze).then((diccionario) => {
       console.log("Diccionario construido:", diccionario);
     });
