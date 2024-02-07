@@ -67,8 +67,8 @@ function SimpleEditor() {
 
   useEffect(() => {
     if (textToAnalyze.length === 0) return;
-    console.log("Texto para analizar:", textToAnalyze);
     construirDiccionario(textToAnalyze).then((diccionario) => {
+      console.log("Texto para construir diccionario:", textToAnalyze);
       console.log("Diccionario construido:", diccionario);
     });
   }, [textToAnalyze]);

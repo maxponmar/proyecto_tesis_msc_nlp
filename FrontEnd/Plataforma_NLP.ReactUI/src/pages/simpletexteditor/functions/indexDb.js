@@ -163,32 +163,6 @@ export async function construirDiccionario(texto) {
     const transaction = db.transaction(["wordGroups"], "readonly");
     const objectStore = transaction.objectStore("wordGroups");
 
-    // Obtiene todas las palabras base y secundarias de la base de datos
-    const palabrasBaseYSecundarias = await new Promise((resolve, reject) => {
-      const request = objectStore.openCursor();
-
-      const palabras = [];
-
-      request.onsuccess = function (event) {
-        const cursor = event.target.result;
-        if (cursor) {
-          const data = cursor.value;
-          palabras.push(data.base, ...data.words);
-          cursor.continue();
-        } else {
-          resolve(palabras);
-        }
-      };
-
-      request.onerror = function (event) {
-        console.error(
-          "Error al acceder a la base de datos:",
-          event.target.error
-        );
-        reject(event.target.error);
-      };
-    });
-
     // Divide el texto de entrada en palabras
     const palabrasTexto = texto.split(" ");
 
@@ -197,9 +171,7 @@ export async function construirDiccionario(texto) {
 
     // Itera a través de las palabras del texto
     for (const palabra of palabrasTexto) {
-      const palabraBase = palabrasBaseYSecundarias.find(
-        (base) => palabra === base
-      );
+      const palabraBase = await buscarPalabraBaseEnBD(palabra, objectStore);
 
       if (diccionario[palabraBase]) {
         // La palabra base ya existe en el diccionario, incrementa su contador
@@ -229,6 +201,32 @@ export async function construirDiccionario(texto) {
     console.error("Ocurrió un error:", error);
     throw error;
   }
+}
+
+// Función auxiliar para buscar la palabra base en la base de datos
+async function buscarPalabraBaseEnBD(palabra, objectStore) {
+  return new Promise((resolve, reject) => {
+    const request = objectStore.get(palabra);
+
+    request.onsuccess = function (event) {
+      const result = event.target.result;
+      if (result) {
+        // Si se encuentra la palabra en la base de datos, devuelve su palabra base
+        resolve(result.base);
+      } else {
+        // Si no se encuentra, simplemente devuelve la palabra original
+        resolve(palabra);
+      }
+    };
+
+    request.onerror = function (event) {
+      console.error(
+        "Error al buscar palabra en la base de datos:",
+        event.target.error
+      );
+      reject(event.target.error);
+    };
+  });
 }
 
 export function openDataBase(callback) {
