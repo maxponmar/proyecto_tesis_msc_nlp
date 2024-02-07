@@ -63,7 +63,7 @@ export function saveWordGruopsToDB(wordGroups) {
 
 export async function eliminarPalabrasSecundarias(texto) {
   try {
-    // Abre una conexión a la base de datos
+    // Abre una conexión a la base de datos o la crea si no existe
     const db = await new Promise((resolve, reject) => {
       const request = indexedDB.open("miBaseDeDatos", 1);
 
@@ -73,6 +73,16 @@ export async function eliminarPalabrasSecundarias(texto) {
           event.target.errorCode
         );
         reject(event.target.error);
+      };
+
+      request.onupgradeneeded = function (event) {
+        const db = event.target.result;
+
+        // Define la estructura de la base de datos si está creándose por primera vez
+        const wordGroupsStore = db.createObjectStore("wordGroups", {
+          keyPath: "base",
+        });
+        // Puedes agregar índices o propiedades adicionales si es necesario
       };
 
       request.onsuccess = function (event) {
@@ -122,7 +132,7 @@ export async function eliminarPalabrasSecundarias(texto) {
     transaction.oncomplete = function () {
       db.close();
       if (textoResultado.length > 0)
-        console.log("Texto sin palabras secundarias:", textoResultado);
+        console.log("Texto sin palabras repetidas en db:", textoResultado);
     };
 
     return textoResultado;
