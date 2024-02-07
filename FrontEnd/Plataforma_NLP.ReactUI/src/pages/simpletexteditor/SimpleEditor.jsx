@@ -62,21 +62,6 @@ function SimpleEditor() {
       saveWordGruopsToDB(freelingStatus.data?.wordGroups);
 
       setTextToAnalyze(debouncedInput);
-      // openDataBase((db) => {
-      //   addDataToDataBase(db, freelingStatus.data?.wordGroups);
-      // });
-
-      // let filteredText = "";
-      // openDataBase((db) => {
-      //   eliminarPalabrasRelacionadasDelTexto(
-      //     db,
-      //     userInput,
-      //     function (filteredText) {
-      //       if (filteredText.length === 0) return;
-      //       createWordDictionary(filteredText, setWordDictionary);
-      //     }
-      //   );
-      // });
     }
   }, [freelingStatus]);
 
