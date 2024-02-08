@@ -1,5 +1,8 @@
-import palabrasComunes from "../../../assets/lexical/commonwords.json";
-import stopwords from "../../../assets/lexical/stopwords.json";
+import commonWordsFromFile from "../../../assets/lexical/commonwords.json";
+import stopWordsFromFile from "../../../assets/lexical/stopwords.json";
+
+const palabrasComunes = new Set(commonWordsFromFile);
+const stopwords = new Set(stopWordsFromFile);
 
 export function saveWordGruopsToDB(wordGroups) {
   // Abre o crea la base de datos IndexDB
@@ -178,8 +181,8 @@ export async function construirDiccionario(texto) {
         diccionario[palabra].contador++;
       } else {
         // Agrega la palabra base al diccionario
-        const esComun = palabrasComunes.includes(palabraBase);
-        const esStopword = stopwords.includes(palabraBase);
+        const esComun = palabrasComunes.has(palabraBase);
+        const esStopword = stopwords.has(palabraBase);
 
         diccionario[palabra] = {
           palabraBase: palabraBase,

@@ -30,7 +30,95 @@ function SimpleEditor() {
     variety: { LSL: 0, USL: 0 },
   });
 
-  const analyzeText = (text) => {};
+  const analyzeText = (text) => {
+    const textParts = text.match(/\w+|\W+/g);
+    const cleanText = text.match(/\b(\w+)\b/g);
+
+    let nonStopWords = [];
+
+    for (var key in wordDictionary) {
+      if (wordDictionary[key].esStopword === false) {
+        nonStopWords.push(key);
+      }
+    }
+
+    const commonWords = nonStopWords.filter((word) => {
+      const lowerWord = word.toLowerCase();
+      return (
+        wordDictionary[lowerWord] && wordDictionary[lowerWord].isCommonWord
+      );
+    });
+
+    const repeatedWords = nonStopWords.filter((word) => {
+      const lowerWord = word.toLowerCase();
+      return (
+        wordDictionary[lowerWord] && wordDictionary[lowerWord].contador > 1
+      );
+    });
+
+    const uniqueWords = new Set(nonStopWords);
+
+    console.log("nonStopWords: ", nonStopWords);
+    console.log("uniqueWords: ", uniqueWords);
+    console.log("commonWords: ", commonWords);
+
+    const N = cleanText.length;
+    const Nlex = nonStopWords.length;
+    const Tlex = uniqueWords.size;
+    const Nslex = Nlex - commonWords.length;
+
+    console.log("N: " + N);
+    console.log("Nlex: " + Nlex);
+    console.log("Tlex: " + Tlex);
+    console.log("Nslex: " + Nslex);
+
+    const scores = [
+      {
+        name: "Variedad",
+        score: Tlex / Nlex,
+      },
+      {
+        name: "Densidad",
+        score: Tlex / N,
+      },
+      {
+        name: "Sofisticación",
+        score: Nslex / Nlex,
+      },
+    ];
+
+    const highlightedText = textParts.map((part, index) => {
+      if (part === " ") return <span key={index}>&nbsp;</span>;
+      const lowerPart = part.toLowerCase();
+      if (/\w+/.test(part) && wordDictionary[lowerPart]) {
+        if (wordDictionary[lowerPart].esStopword) {
+          return <span key={index}>{part}</span>;
+        } else if (wordDictionary[lowerPart].esComun) {
+          return (
+            <span key={index} className="font-bold bg-yellow-400">
+              {part}
+            </span>
+          );
+        } else if (wordDictionary[lowerPart].contador > 1) {
+          return (
+            <span key={index} className="text-red-500">
+              {part}
+            </span>
+          );
+        } else {
+          return <span key={index}>{part}</span>;
+        }
+      }
+      return <span>{part}</span>;
+    });
+
+    return {
+      scores,
+      highlightedText,
+      repeatedWords: repeatedWords.length,
+      commonWords: commonWords.length,
+    };
+  };
 
   useEffect(() => {
     if (debouncedInput.length === 0) return;
@@ -77,11 +165,10 @@ function SimpleEditor() {
   useEffect(() => {
     if (Object.keys(wordDictionary).length === 0) return;
 
-    const highlightedText = analyzeText(textToAnalyze, wordDictionary.dict);
+    const result = analyzeText(textToAnalyze, wordDictionary.dict);
 
-    console.log("texto resultado: ", highlightedText);
-
-    setResult(highlightedText);
+    console.log("resultado de analisis: ", result);
+    setResult(result);
   }, [wordDictionary]);
 
   return (
