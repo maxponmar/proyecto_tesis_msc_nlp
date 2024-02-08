@@ -4,10 +4,8 @@ import { useLazyGetFreelingResultsQuery } from "../../api/defaultApi";
 import AnalysisResults from "./components/AnalysisResults";
 import AnalysisSelector from "./components/AnalysisSelector";
 import {
-  buscarPalabraBase,
   construirDiccionario,
   eliminarPalabrasSecundarias,
-  openDataBase,
   procesarDiccionario,
   saveWordGruopsToDB,
 } from "./functions/indexDb";
@@ -34,6 +32,7 @@ function SimpleEditor() {
     const textParts = text.match(/\w+|\W+/g);
     const cleanText = text.match(/\b(\w+)\b/g);
 
+    if (cleanText === null || textParts === null) return;
     let nonStopWords = [];
 
     for (var key in wordDictionary) {
@@ -163,7 +162,8 @@ function SimpleEditor() {
   }, [textToAnalyze]);
 
   useEffect(() => {
-    if (Object.keys(wordDictionary).length === 0) return;
+    if (Object.keys(wordDictionary).length === 0 || textToAnalyze.length === 0)
+      return;
 
     const result = analyzeText(textToAnalyze, wordDictionary.dict);
 
@@ -183,25 +183,6 @@ function SimpleEditor() {
         <div className="flex-1 mt-2">
           {result ? <p>{result.highlightedText}</p> : null}
         </div>
-        <button
-          className="px-4 py-2 rounded bg-blue-400 text-black"
-          onClick={() => {
-            openDataBase((db) => {
-              const palabraABuscar = "gas";
-
-              buscarPalabraBase(db, palabraABuscar, function (palabraBase) {
-                console.log(palabraBase);
-                // if (palabraBase) {
-                //     console.log(`La palabra base de "${palabraABuscar}" es "${palabraBase}".`);
-                // } else {
-                //     console.log(`No se encontró una palabra base para "${palabraABuscar}".`);
-                // }
-              });
-            });
-          }}
-        >
-          Test Button
-        </button>
       </div>
       <div className="flex flex-col flex-basis[300px] flex-shrink-0 ml-5">
         <AnalysisSelector
