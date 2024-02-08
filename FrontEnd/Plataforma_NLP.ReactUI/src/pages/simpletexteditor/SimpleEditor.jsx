@@ -35,7 +35,7 @@ function SimpleEditor() {
   useEffect(() => {
     if (debouncedInput.length === 0) return;
 
-    eliminarPalabrasSecundarias(debouncedInput).then((filteredText) => {
+    eliminarPalabrasSecundarias(debouncedInput.trim()).then((filteredText) => {
       if (filteredText.length === 0) {
         console.log("No hay palabras nuevas");
         setTextToAnalyze(debouncedInput);
@@ -69,20 +69,17 @@ function SimpleEditor() {
   useEffect(() => {
     if (textToAnalyze.length === 0) return;
     construirDiccionario(textToAnalyze).then((diccionario) => {
-      console.log("Texto para construir diccionario:", textToAnalyze);
-      console.log("Diccionario construido:", diccionario);
       let processedDictionary = procesarDiccionario(diccionario);
-      console.log("Diccionario procesado:", processedDictionary);
+      setWordDictionary(processedDictionary);
     });
   }, [textToAnalyze]);
 
   useEffect(() => {
     if (Object.keys(wordDictionary).length === 0) return;
 
-    const highlightedText = analyzeText(
-      filteredText.filteredText,
-      wordDictionary.dict
-    );
+    const highlightedText = analyzeText(textToAnalyze, wordDictionary.dict);
+
+    console.log("texto resultado: ", highlightedText);
 
     setResult(highlightedText);
   }, [wordDictionary]);
