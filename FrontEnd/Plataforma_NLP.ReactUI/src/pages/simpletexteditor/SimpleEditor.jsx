@@ -120,7 +120,8 @@ function SimpleEditor() {
   };
 
   useEffect(() => {
-    if (debouncedInput.length === 0) return;
+    if (debouncedInput.length === 0 || selectedOption.section.length === 0)
+      return;
 
     eliminarPalabrasSecundarias(debouncedInput.trim()).then((filteredText) => {
       if (filteredText.length === 0) {
@@ -154,7 +155,8 @@ function SimpleEditor() {
   }, [freelingStatus]);
 
   useEffect(() => {
-    if (textToAnalyze.length === 0) return;
+    if (textToAnalyze.length === 0 || selectedOption.section.length === 0)
+      return;
     construirDiccionario(textToAnalyze).then((diccionario) => {
       let processedDictionary = procesarDiccionario(diccionario);
       setWordDictionary(processedDictionary);
@@ -181,7 +183,9 @@ function SimpleEditor() {
           className="flex-1 resize-none"
         />
         <div className="flex-1 mt-2">
-          {result ? <p>{result.highlightedText}</p> : null}
+          {result && selectedOption.section ? (
+            <p>{result.highlightedText}</p>
+          ) : null}
         </div>
       </div>
       <div className="flex flex-col flex-basis[300px] flex-shrink-0 ml-5">
@@ -189,7 +193,7 @@ function SimpleEditor() {
           selectedOption={selectedOption}
           setSelectedOption={setSelectedOption}
         />
-        {result ? (
+        {result && selectedOption.section ? (
           <AnalysisResults
             analyses={result.scores}
             commonWords={result.commonWords}
