@@ -1,5 +1,5 @@
-const palabrasComunes = ["ejemplo", "este"];
-const stopwords = ["es", "un", "con", "y"];
+import palabrasComunes from "../../../assets/lexical/commonwords.json";
+import stopwords from "../../../assets/lexical/stopwords.json";
 
 export function saveWordGruopsToDB(wordGroups) {
   // Abre o crea la base de datos IndexDB
