@@ -92,15 +92,15 @@ function SimpleEditor() {
       if (/\w+/.test(part) && wordDictionary[lowerPart]) {
         if (wordDictionary[lowerPart].esStopword) {
           return <span key={index}>{part}</span>;
-        } else if (wordDictionary[lowerPart].esComun) {
-          return (
-            <span key={index} className="font-bold bg-yellow-400">
-              {part}
-            </span>
-          );
         } else if (wordDictionary[lowerPart].contador > 1) {
           return (
             <span key={index} className="text-red-500">
+              {part}
+            </span>
+          );
+        } else if (wordDictionary[lowerPart].esComun) {
+          return (
+            <span key={index} className="font-bold bg-yellow-400">
               {part}
             </span>
           );
