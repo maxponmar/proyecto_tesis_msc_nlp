@@ -173,15 +173,15 @@ export async function construirDiccionario(texto) {
     for (const palabra of palabrasTexto) {
       const palabraBase = await buscarPalabraBaseEnBD(palabra, objectStore);
 
-      if (diccionario[palabraBase]) {
+      if (diccionario[palabra]) {
         // La palabra base ya existe en el diccionario, incrementa su contador
-        diccionario[palabraBase].contador++;
+        diccionario[palabra].contador++;
       } else {
         // Agrega la palabra base al diccionario
         const esComun = palabrasComunes.includes(palabraBase);
         const esStopword = stopwords.includes(palabraBase);
 
-        diccionario[palabraBase] = {
+        diccionario[palabra] = {
           palabraBase: palabraBase,
           contador: 1,
           esComun: esComun,
@@ -206,13 +206,19 @@ export async function construirDiccionario(texto) {
 // Función auxiliar para buscar la palabra base en la base de datos
 async function buscarPalabraBaseEnBD(palabra, objectStore) {
   return new Promise((resolve, reject) => {
-    const request = objectStore.get(palabra);
+    const request = objectStore.openCursor();
 
     request.onsuccess = function (event) {
-      const result = event.target.result;
-      if (result) {
-        // Si se encuentra la palabra en la base de datos, devuelve su palabra base
-        resolve(result.base);
+      const cursor = event.target.result;
+      if (cursor) {
+        const data = cursor.value;
+
+        if (data.words.includes(palabra)) {
+          // Si la palabra está en el arreglo "words", esa es la palabra base
+          resolve(data.base);
+        } else {
+          cursor.continue();
+        }
       } else {
         // Si no se encuentra, simplemente devuelve la palabra original
         resolve(palabra);
@@ -227,6 +233,43 @@ async function buscarPalabraBaseEnBD(palabra, objectStore) {
       reject(event.target.error);
     };
   });
+}
+
+export function procesarDiccionario(diccionario) {
+  const diccionarioProcesado = {};
+
+  // Iterar sobre las entradas del diccionario original
+  for (const palabraOriginal in diccionario) {
+    const entradaOriginal = diccionario[palabraOriginal];
+    const palabraBase = entradaOriginal.palabraBase;
+
+    let cantidadDeRepeticiones = filtrarYSumarContador(
+      diccionario,
+      palabraBase
+    );
+
+    diccionarioProcesado[palabraOriginal] = {
+      ...diccionario[palabraOriginal],
+      contador: cantidadDeRepeticiones,
+    };
+  }
+
+  return diccionarioProcesado;
+}
+
+// Función para filtrar elementos por propiedad "palabraBase"
+function filtrarYSumarContador(diccionario, palabraBuscada) {
+  var elementosFiltrados = {};
+  var sumaContador = 0;
+
+  for (var key in diccionario) {
+    if (diccionario[key].palabraBase === palabraBuscada) {
+      elementosFiltrados[key] = diccionario[key];
+      sumaContador += diccionario[key].contador;
+    }
+  }
+
+  return sumaContador;
 }
 
 export function openDataBase(callback) {

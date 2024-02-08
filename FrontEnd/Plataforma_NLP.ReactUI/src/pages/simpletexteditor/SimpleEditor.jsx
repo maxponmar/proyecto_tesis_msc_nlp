@@ -8,6 +8,7 @@ import {
   construirDiccionario,
   eliminarPalabrasSecundarias,
   openDataBase,
+  procesarDiccionario,
   saveWordGruopsToDB,
 } from "./functions/indexDb";
 
@@ -70,6 +71,8 @@ function SimpleEditor() {
     construirDiccionario(textToAnalyze).then((diccionario) => {
       console.log("Texto para construir diccionario:", textToAnalyze);
       console.log("Diccionario construido:", diccionario);
+      let processedDictionary = procesarDiccionario(diccionario);
+      console.log("Diccionario procesado:", processedDictionary);
     });
   }, [textToAnalyze]);
 
