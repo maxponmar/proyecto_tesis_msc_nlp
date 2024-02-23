@@ -43,9 +43,7 @@ function SimpleEditor() {
 
     const commonWords = nonStopWords.filter((word) => {
       const lowerWord = word.toLowerCase();
-      return (
-        wordDictionary[lowerWord] && wordDictionary[lowerWord].isCommonWord
-      );
+      return wordDictionary[lowerWord] && wordDictionary[lowerWord].esComun;
     });
 
     const repeatedWords = nonStopWords.filter((word) => {
