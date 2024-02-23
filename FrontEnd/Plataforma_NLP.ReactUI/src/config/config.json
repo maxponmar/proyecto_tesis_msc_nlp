@@ -1,5 +1,5 @@
 {
-  "apiurl": "http://66.94.124.10:4000/api",
+  "apiurl": "https://nlp.maximilianoponce.com:4000/api",
   "appTitle": "Plataforma NLP - ITN",
   "appHeader": "Plataforma NLP - ITN",
   "developerName": "Maximiliano Ponce Marquez",
