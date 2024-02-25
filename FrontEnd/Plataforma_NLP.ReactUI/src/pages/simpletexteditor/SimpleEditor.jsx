@@ -4,10 +4,9 @@ import { useLazyGetFreelingResultsQuery } from "../../api/defaultApi";
 import AnalysisResults from "./components/AnalysisResults";
 import AnalysisSelector from "./components/AnalysisSelector";
 import {
-  buscarPalabraBase,
   construirDiccionario,
   eliminarPalabrasSecundarias,
-  openDataBase,
+  procesarDiccionario,
   saveWordGruopsToDB,
 } from "./functions/indexDb";
 
@@ -29,12 +28,100 @@ function SimpleEditor() {
     variety: { LSL: 0, USL: 0 },
   });
 
-  const analyzeText = (text) => {};
+  const analyzeText = (text) => {
+    const textParts = text.match(/\w+|\W+/g);
+    const cleanText = text.match(/\b(\w+)\b/g);
+
+    if (cleanText === null || textParts === null) return;
+    let nonStopWords = [];
+
+    for (var key in wordDictionary) {
+      if (wordDictionary[key].esStopword === false) {
+        nonStopWords.push(key);
+      }
+    }
+
+    const commonWords = nonStopWords.filter((word) => {
+      const lowerWord = word.toLowerCase();
+      return wordDictionary[lowerWord] && wordDictionary[lowerWord].esComun;
+    });
+
+    const repeatedWords = nonStopWords.filter((word) => {
+      const lowerWord = word.toLowerCase();
+      return (
+        wordDictionary[lowerWord] && wordDictionary[lowerWord].contador > 1
+      );
+    });
+
+    const uniqueWords = new Set(nonStopWords);
+
+    console.log("nonStopWords: ", nonStopWords);
+    console.log("uniqueWords: ", uniqueWords);
+    console.log("commonWords: ", commonWords);
+
+    const N = cleanText.length;
+    const Nlex = nonStopWords.length;
+    const Tlex = uniqueWords.size;
+    const Nslex = Nlex - commonWords.length;
+
+    console.log("N: " + N);
+    console.log("Nlex: " + Nlex);
+    console.log("Tlex: " + Tlex);
+    console.log("Nslex: " + Nslex);
+
+    const scores = [
+      {
+        name: "Variedad",
+        score: Tlex / Nlex,
+      },
+      {
+        name: "Densidad",
+        score: Tlex / N,
+      },
+      {
+        name: "Sofisticación",
+        score: Nslex / Nlex,
+      },
+    ];
+
+    const highlightedText = textParts.map((part, index) => {
+      if (part === " ") return <span key={index}>&nbsp;</span>;
+      const lowerPart = part.toLowerCase();
+      if (/\w+/.test(part) && wordDictionary[lowerPart]) {
+        if (wordDictionary[lowerPart].esStopword) {
+          return <span key={index}>{part}</span>;
+        } else if (wordDictionary[lowerPart].contador > 1) {
+          return (
+            <span key={index} className="text-red-500">
+              {part}
+            </span>
+          );
+        } else if (wordDictionary[lowerPart].esComun) {
+          return (
+            <span key={index} className="font-bold bg-yellow-400">
+              {part}
+            </span>
+          );
+        } else {
+          return <span key={index}>{part}</span>;
+        }
+      }
+      return <span>{part}</span>;
+    });
+
+    return {
+      scores,
+      highlightedText,
+      repeatedWords: repeatedWords.length,
+      commonWords: commonWords.length,
+    };
+  };
 
   useEffect(() => {
-    if (debouncedInput.length === 0) return;
+    if (debouncedInput.length === 0 || selectedOption.section.length === 0)
+      return;
 
-    eliminarPalabrasSecundarias(debouncedInput).then((filteredText) => {
+    eliminarPalabrasSecundarias(debouncedInput.trim()).then((filteredText) => {
       if (filteredText.length === 0) {
         console.log("No hay palabras nuevas");
         setTextToAnalyze(debouncedInput);
@@ -66,62 +153,72 @@ function SimpleEditor() {
   }, [freelingStatus]);
 
   useEffect(() => {
-    if (textToAnalyze.length === 0) return;
+    if (textToAnalyze.length === 0 || selectedOption.section.length === 0)
+      return;
     construirDiccionario(textToAnalyze).then((diccionario) => {
-      console.log("Texto para construir diccionario:", textToAnalyze);
-      console.log("Diccionario construido:", diccionario);
+      let processedDictionary = procesarDiccionario(diccionario);
+      setWordDictionary(processedDictionary);
     });
   }, [textToAnalyze]);
 
   useEffect(() => {
-    if (Object.keys(wordDictionary).length === 0) return;
+    if (Object.keys(wordDictionary).length === 0 || textToAnalyze.length === 0)
+      return;
 
-    const highlightedText = analyzeText(
-      filteredText.filteredText,
-      wordDictionary.dict
-    );
+    const result = analyzeText(textToAnalyze, wordDictionary.dict);
 
-    setResult(highlightedText);
+    console.log("resultado de analisis: ", result);
+    setResult(result);
   }, [wordDictionary]);
 
   return (
-    <div className="flex h-[calc(100vh-210px)] m-10">
-      <div className="flex flex-col flex-grow">
-        <textarea
-          onChange={(e) => {
-            setUserInput(e.target.value);
-          }}
-          className="flex-1 resize-none"
-        />
-        <div className="flex-1 mt-2">
-          {result ? <p>{result.highlightedText}</p> : null}
+    <div
+      className={`flex h-[calc(100vh-210px)] m-10 ${
+        selectedOption.section.length === 0
+          ? "justify-start flex-col items-center"
+          : "justify-center"
+      } `}
+    >
+      {selectedOption.section ? (
+        <div className="flex flex-col flex-grow">
+          <textarea
+            onChange={(e) => {
+              setUserInput(e.target.value);
+            }}
+            className="flex-1 resize-none"
+          />
+          <div className="flex-1 mt-2">
+            {result ? <p>{result.highlightedText}</p> : null}
+          </div>
         </div>
-        <button
-          className="px-4 py-2 rounded bg-blue-400 text-black"
-          onClick={() => {
-            openDataBase((db) => {
-              const palabraABuscar = "gas";
-
-              buscarPalabraBase(db, palabraABuscar, function (palabraBase) {
-                console.log(palabraBase);
-                // if (palabraBase) {
-                //     console.log(`La palabra base de "${palabraABuscar}" es "${palabraBase}".`);
-                // } else {
-                //     console.log(`No se encontró una palabra base para "${palabraABuscar}".`);
-                // }
-              });
-            });
-          }}
+      ) : (
+        <div
+          className="flex items-center p-4 mb-4 text-sm text-blue-800 rounded-lg bg-blue-50 h-20 w-96"
+          role="alert"
         >
-          Test Button
-        </button>
-      </div>
-      <div className="flex flex-col flex-basis[300px] flex-shrink-0 ml-5">
+          <svg
+            className="flex-shrink-0 inline w-4 h-4 me-3"
+            aria-hidden="true"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="currentColor"
+            viewBox="0 0 20 20"
+          >
+            <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z" />
+          </svg>
+          <span className="sr-only">Info</span>
+          <div>
+            <span className="font-medium">Bienvenid@</span> Seleccione una
+            opción para comenzar
+          </div>
+        </div>
+      )}
+
+      <div className="flex flex-col flex-basis[300px] flex-shrink-0 ml-5 items-center">
         <AnalysisSelector
           selectedOption={selectedOption}
           setSelectedOption={setSelectedOption}
         />
-        {result ? (
+        {result && selectedOption.section ? (
           <AnalysisResults
             analyses={result.scores}
             commonWords={result.commonWords}
