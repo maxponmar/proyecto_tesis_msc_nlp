@@ -1,5 +1,5 @@
 {
-  "apiurl": "https://nlp.maximilianoponce.com:4000/api",
+  "apiurl": "https://express-freeling-bridge-lwqpwzvcs-maxponmar.vercel.app/api/v1",
   "appTitle": "Plataforma NLP - ITN",
   "appHeader": "Plataforma NLP - ITN",
   "developerName": "Maximiliano Ponce Marquez.",

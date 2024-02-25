@@ -12,8 +12,20 @@ const app = express();
 
 app.use(morgan("dev"));
 app.use(helmet());
-app.use(cors());
+app.use(
+  cors({
+    origin: "*",
+    methods: ["GET", "POST"],
+  })
+);
 app.use(express.json());
+
+app.use((req, res, next) => {
+  res.append("Access-Control-Allow-Origin", "*");
+  res.append("Access-Control-Allow-Methods", "GET,POST");
+  res.append("Access-Control-Allow-Headers", "Content-Type");
+  next();
+});
 
 app.get("/", (req, res) => {
   res.json({
