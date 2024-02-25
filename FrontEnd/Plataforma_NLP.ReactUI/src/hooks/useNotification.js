@@ -9,6 +9,9 @@ export default function useNotification(
   onConfirm = () => {}
 ) {
   useEffect(() => {
+    if (status.isLoading || status.isFetching) {
+      toast.loading(loadingMessage);
+    }
     if (status.isSuccess) {
       swal("Listo!", successMessage, "success").then((confirm) => {
         if (confirm) {
@@ -26,8 +29,6 @@ export default function useNotification(
           onConfirm();
         }
       });
-    }
-    if (status.isLoading) toast.loading(loadingMessage);
-    else toast.dismiss();
-  }, [status.isSuccess, status.isLoading, status.isError, status.error]);
+    } else toast.dismiss();
+  }, [status]);
 }
