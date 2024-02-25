@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import toast from "react-hot-toast";
 import { useLazyGetFreelingResultsQuery } from "../../api/defaultApi";
 import Wordgroups from "./components/Wordgroups";
 
@@ -12,6 +13,10 @@ const FreelingApplication = () => {
   };
 
   const handleProcessText = () => {
+    if (text === "") {
+      toast.error("El texto no puede estar vacío");
+      return;
+    }
     getFreelingAnalysis({ text });
   };
 
@@ -63,8 +68,8 @@ const FreelingApplication = () => {
               procesar el texto.
             </div>
           </div>
-        ) : freelingStatus.isLoading ? (
-          <div className="px-3 py-1 text-xs font-medium leading-none text-center text-blue-800 bg-blue-200 rounded-full animate-pulse">
+        ) : freelingStatus.isFetching ? (
+          <div className="px-3 py-4 text-xs font-medium leading-none text-center text-blue-800 bg-blue-200 rounded-full animate-pulse">
             Procesando...
           </div>
         ) : freelingStatus.data ? (
