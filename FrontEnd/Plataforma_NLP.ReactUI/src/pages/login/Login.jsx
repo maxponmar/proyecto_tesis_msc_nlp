@@ -1,40 +1,77 @@
-import { useAuth0 } from '@auth0/auth0-react';
-import { Navigate } from 'react-router-dom';
-import ItnLogo from '../../assets/images/tecnm_itn.jpg';
+import { useAuth0 } from "@auth0/auth0-react";
 
 function Login() {
   const { loginWithPopup, isAuthenticated } = useAuth0();
   return (
-    <div className="relative flex flex-col justify-center items-center h-[calc(100vh-65px)]">
+    <section class="bg-stone-200 relative flex flex-col justify-center items-center">
       {isAuthenticated ? <Navigate to="/" /> : null}
-
-      <div className="relative sm:max-w-sm max-w-[300px]">
-        <div className="bg-stone-900 shadow-lg w-full h-full rounded-3xl absolute  transform -rotate-6"></div>
-        <div className="bg-itn shadow-lg w-full h-full rounded-3xl absolute  transform rotate-6"></div>
-        <div className="relative w-full rounded-3xl  px-6 py-4 shadow-md bg-white ">
-          <div className=" items-center justify-center flex-col py-10 ">
-            <img
-              className="top-0 left-0 w-full h-full object-scale-down"
-              src={ItnLogo}
-              alt="Intituto Tecnologico de Nogales"
-            />
-          </div>
-          <label className="block mt-3 text-sm text-center text-black font-bold">
-            Inicie sesion con alguna correo electronico o red social
-          </label>
-          <div className="mt-10">
-            <div className="mt-7">
+      <div class="flex flex-col items-center justify-center px-6 py-8 mx-auto lg:py-0">
+        <a
+          href="#"
+          class="flex items-center mb-6 text-2xl font-semibold text-gray-900"
+        >
+          <img class="w-8 h-8 mr-2" src="/retmeepro.svg" alt="logo" />
+          RetmeePro
+        </a>
+        <div class="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0">
+          <div class="p-6 space-y-4 md:space-y-6 sm:p-8">
+            <h1 class="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl">
+              Iniciar sesión
+            </h1>
+            <form class="space-y-4 md:space-y-6" action="#">
+              <div>
+                <label
+                  for="email"
+                  class="block mb-2 text-sm font-medium text-gray-900"
+                >
+                  Correo electrónico
+                </label>
+                <input
+                  type="email"
+                  name="email"
+                  id="email"
+                  class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
+                  placeholder="nombre@email.com"
+                  required=""
+                />
+              </div>
+              <div>
+                <label
+                  for="password"
+                  class="block mb-2 text-sm font-medium text-gray-900"
+                >
+                  Contraseña
+                </label>
+                <input
+                  type="password"
+                  name="password"
+                  id="password"
+                  placeholder="••••••••"
+                  class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
+                  required=""
+                />
+              </div>
               <button
-                onClick={(e) => loginWithPopup()}
-                className="bg-blue-500 w-full py-3 rounded-xl text-white shadow-xl hover:shadow-inner focus:outline-none transition duration-500 ease-in-out  transform hover:-translate-x hover:scale-105"
+                type="submit"
+                class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 "
               >
-                Iniciar Sesion
+                Iniciar Sesión
               </button>
-            </div>
+
+              <p class="text-sm font-light text-gray-500">
+                Aún no tiene una cuenta?{" "}
+                <a
+                  href="#"
+                  class="font-medium text-primary-600 hover:underline dark:text-primary-500"
+                >
+                  Registrese aquí
+                </a>
+              </p>
+            </form>
           </div>
         </div>
       </div>
-    </div>
+    </section>
   );
 }
 
