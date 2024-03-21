@@ -11,9 +11,11 @@ import FreelingApplication from "../pages/freeling/Freeling";
 import Home from "../pages/home/Home";
 import Login from "../pages/login/Login";
 import Unauthorized from "../pages/noauthorized/Unauthorized";
+import Register from "../pages/register/Register";
 import SimpleEditor from "../pages/simpletexteditor/SimpleEditor";
 import PdfGuide from "../pages/support/PdfGuide";
 import Support from "../pages/support/Support";
+import Terms from "../pages/terms/Terms";
 
 const routes = [
   {
@@ -28,7 +30,7 @@ const routes = [
   {
     path: "/riquezalexica",
     component: SimpleEditor,
-    isProtected: false,
+    isProtected: true,
     icon: BiPencil,
     title: "Riqueza Lexica",
     allowedRoles: ["ALL"],
@@ -51,6 +53,24 @@ const routes = [
     title: "Login",
     allowedRoles: ["ALL"],
     showOnSidebar: false,
+  },
+  {
+    path: "/register",
+    component: Register,
+    isProtected: false,
+    icon: BiLogIn,
+    title: "Registro",
+    allowedRoles: ["ALL"],
+    showOnSidebar: false,
+  },
+  {
+    path: "/termsandconditions",
+    component: Terms,
+    isProtected: false,
+    icon: BiLogIn,
+    title: "Términos y Condiciones",
+    allowedRoles: ["ALL"],
+    showOnSidebar: true,
   },
   {
     path: "/guide",

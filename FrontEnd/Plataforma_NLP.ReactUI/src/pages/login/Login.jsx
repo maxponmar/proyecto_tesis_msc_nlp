@@ -1,10 +1,27 @@
 import { useAuth0 } from "@auth0/auth0-react";
+import { useRef } from "react";
+import { Link, Navigate } from "react-router-dom";
+import { useAuth } from "../../context/AuthContext";
 
 function Login() {
   const { loginWithPopup, isAuthenticated } = useAuth0();
+  const { user, loginUser } = useAuth();
+
+  const loginForm = useRef(null);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    const email = loginForm.current.email.value;
+    const password = loginForm.current.password.value;
+
+    const userInfo = { email, password };
+    loginUser(userInfo);
+  };
+
   return (
     <section className="bg-stone-200 relative flex flex-col justify-center items-center">
-      {isAuthenticated ? <Navigate to="/" /> : null}
+      {!user ? <Navigate to="/" /> : null}
       <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto lg:py-0">
         <a
           href="#"
@@ -18,7 +35,11 @@ function Login() {
             <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl">
               Iniciar sesión
             </h1>
-            <form className="space-y-4 md:space-y-6" action="#">
+            <form
+              className="space-y-4 md:space-y-6"
+              ref={loginForm}
+              onSubmit={handleSubmit}
+            >
               <div>
                 <label
                   htmlFor="email"
@@ -60,12 +81,12 @@ function Login() {
 
               <p className="text-sm font-light text-gray-500">
                 Aún no tiene una cuenta?{" "}
-                <a
-                  href="#"
+                <Link
+                  to="/register"
                   className="font-medium text-primary-600 hover:underline dark:text-primary-500"
                 >
                   Registrese aquí
-                </a>
+                </Link>
               </p>
             </form>
           </div>

@@ -1,19 +1,19 @@
-import { useAuth0 } from "@auth0/auth0-react";
 import { Link } from "react-router-dom";
+import { useAuth } from "../../context/AuthContext";
 import Login from "../login/Login";
 
 function Home() {
-  const { isAuthenticated, user } = useAuth0();
+  const { user } = useAuth();
 
   return (
     <div className="animate-fadeIn flex flex-col items-center justify-center py-10 px-5 h-full">
-      {!isAuthenticated ? (
+      {!user ? (
         <Login />
       ) : (
         <>
           <h2 className="text-2xl sm:text-3xl font-semibold text-center">
             <span className="font-bold block">
-              {isAuthenticated ? `Bienvenid@ ${user.name}` : "Bienvenid@"}
+              {user ? `Bienvenid@ ${user?.name}` : "Bienvenid@"}
             </span>
           </h2>
           <p className="text-xl font-bold">

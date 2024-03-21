@@ -1,13 +1,14 @@
-import { useAuth0 } from "@auth0/auth0-react";
 import { useState } from "react";
 import { BiHelpCircle, BiLogIn, BiLogOut, BiSupport } from "react-icons/bi";
 import { FaBars } from "react-icons/fa";
+import { useAuth } from "../../context/AuthContext";
 import routes from "../../route/Routes";
 import SidebarLink from "../../route/SidebarLink";
 
 function Sidebar() {
   const [showSidebar, setShowSidebar] = useState(false);
-  const { isAuthenticated, user, logout } = useAuth0();
+
+  const { user, logoutUser } = useAuth();
 
   return (
     <>
@@ -48,7 +49,7 @@ function Sidebar() {
                 .map((route, index) => {
                   if (
                     !route.isProtected ||
-                    (isAuthenticated &&
+                    (user &&
                       route.isProtected &&
                       route.allowedRoles?.includes("ALL")) ||
                     (route.isProtected &&
@@ -68,12 +69,12 @@ function Sidebar() {
                 })}
             </div>
             <div>
-              {isAuthenticated ? (
+              {user ? (
                 <SidebarLink
                   title="Logout"
                   link="/"
                   icon={<BiLogOut />}
-                  onClick={() => logout()}
+                  onClick={() => logoutUser()}
                 />
               ) : (
                 <SidebarLink
