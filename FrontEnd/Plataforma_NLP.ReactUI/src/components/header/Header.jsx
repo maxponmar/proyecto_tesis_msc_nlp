@@ -19,7 +19,7 @@ function Header() {
         <div className="flex items-center justify-center">
           <button
             type="button"
-            class="focus:outline-none text-black  hover:bg-gray-200 focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-2 py-1 inline-flex items-center justify-center gap-2 mr-2"
+            className="focus:outline-none text-black  hover:bg-gray-200 focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-2 py-1 inline-flex items-center justify-center gap-2 mr-2"
             onClick={logoutUser}
           >
             <svg
