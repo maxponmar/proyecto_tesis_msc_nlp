@@ -1,3 +1,11 @@
+import feedbacksJson from "../../../assets/lexical/feedbacks.json";
+
+function getFeedback(status, metric) {
+  var feedbacks = feedbacksJson[status][metric];
+  var randomFeedback = feedbacks[Math.floor(Math.random() * feedbacks.length)];
+  return randomFeedback;
+}
+
 export default function AnalysisScore({ name, limits, score }) {
   const percentage = score * 100;
   let barColor = "";
@@ -14,6 +22,7 @@ export default function AnalysisScore({ name, limits, score }) {
     status = "good";
   }
 
+  const feedback = getFeedback(status, name);
   return (
     <div>
       <div className="flex gap-4 mb-4 justify-evenly">
@@ -32,7 +41,7 @@ export default function AnalysisScore({ name, limits, score }) {
       </div>
       {status === "bad" ? (
         <div
-          className="flex items-center p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50"
+          className="flex items-center p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50 max-w-[350px]"
           role="alert"
         >
           <svg
@@ -46,14 +55,13 @@ export default function AnalysisScore({ name, limits, score }) {
           </svg>
           <span className="sr-only">Info</span>
           <div>
-            <span className="font-medium">OJO!</span> Puedes mejorar esta
-            métrica
+            <span className="font-medium">OJO!</span> {feedback}
           </div>
         </div>
       ) : null}
       {status === "medium" ? (
         <div
-          className="flex items-center p-4 mb-4 text-sm text-yellow-800 rounded-lg bg-yellow-50"
+          className="flex items-center p-4 mb-4 text-sm text-yellow-800 rounded-lg bg-yellow-50 max-w-[350px]"
           role="alert"
         >
           <svg
@@ -67,8 +75,7 @@ export default function AnalysisScore({ name, limits, score }) {
           </svg>
           <span className="sr-only">Info</span>
           <div>
-            <span className="font-medium">Observa!</span> Buen trabajo, pero
-            puedes mejorar aún más
+            <span className="font-medium">Ojo!</span> {feedback}
           </div>
         </div>
       ) : null}
