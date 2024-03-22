@@ -15,6 +15,9 @@ function SimpleEditor() {
   const [analyzing, setAnalyzing] = useState(false);
   const [debouncedInput] = useDebounce(userInput, 1000);
 
+  const [ultimoGuardado, setUltimoGuardado] = useState(null);
+  const [guardadoMensaje, setGuardadoMensaje] = useState("");
+
   const [textToAnalyze, setTextToAnalyze] = useState("");
 
   const [wordDictionary, setWordDictionary] = useState({});
@@ -28,6 +31,16 @@ function SimpleEditor() {
     sophistication: { LSL: 0, USL: 0 },
     variety: { LSL: 0, USL: 0 },
   });
+
+  const guardarTexto = () => {
+    setGuardadoMensaje("Guardado hace menos de 1 minuto");
+    console.log("Guardando texto...");
+    // Simulamos guardar el texto en una base de datos o servidor
+    console.log("Texto guardado:", textToAnalyze);
+
+    // Actualizamos la hora del último guardado
+    setUltimoGuardado(new Date());
+  };
 
   const analyzeText = (text) => {
     const textParts = text.match(/\w+|\W+/g);
@@ -56,19 +69,19 @@ function SimpleEditor() {
 
     const uniqueWords = new Set(nonStopWords);
 
-    console.log("nonStopWords: ", nonStopWords);
-    console.log("uniqueWords: ", uniqueWords);
-    console.log("commonWords: ", commonWords);
+    // console.log("nonStopWords: ", nonStopWords);
+    // console.log("uniqueWords: ", uniqueWords);
+    // console.log("commonWords: ", commonWords);
 
     const N = cleanText.length;
     const Nlex = nonStopWords.length;
     const Tlex = uniqueWords.size;
     const Nslex = Nlex - commonWords.length;
 
-    console.log("N: " + N);
-    console.log("Nlex: " + Nlex);
-    console.log("Tlex: " + Tlex);
-    console.log("Nslex: " + Nslex);
+    // console.log("N: " + N);
+    // console.log("Nlex: " + Nlex);
+    // console.log("Tlex: " + Tlex);
+    // console.log("Nslex: " + Nslex);
 
     const scores = [
       {
@@ -118,6 +131,33 @@ function SimpleEditor() {
     };
   };
 
+  // Efecto para guardar automáticamente después de 10 minutos
+  useEffect(() => {
+    const intervaloGuardadoAutomatico = setInterval(() => {
+      guardarTexto();
+    }, 600000); // 600000 milisegundos = 10 minutos
+
+    return () => clearInterval(intervaloGuardadoAutomatico);
+  }, []);
+
+  useEffect(() => {
+    const intervaloActualizacionMensaje = setInterval(() => {
+      if (ultimoGuardado) {
+        const ahora = new Date();
+        const diferencia = ahora - ultimoGuardado;
+        const minutos = Math.floor(diferencia / 60000);
+
+        if (minutos === 1) {
+          setGuardadoMensaje("Guardado por última vez hace 1 minuto");
+        } else {
+          setGuardadoMensaje(`Guardado por última vez hace ${minutos} minutos`);
+        }
+      }
+    }, 60000); // Verifica cada minuto
+
+    return () => clearInterval(intervaloActualizacionMensaje);
+  }, [ultimoGuardado]);
+
   useEffect(() => {
     setAnalyzing(true);
   }, [userInput]);
@@ -128,7 +168,7 @@ function SimpleEditor() {
 
     eliminarPalabrasSecundarias(debouncedInput.trim()).then((filteredText) => {
       if (filteredText.length === 0) {
-        console.log("No hay palabras nuevas");
+        // console.log("No hay palabras nuevas");
         setTextToAnalyze(debouncedInput);
         return;
       }
@@ -141,15 +181,15 @@ function SimpleEditor() {
   useEffect(() => {
     if (freelingStatus.isSuccess) {
       if (freelingStatus.data?.wordGroups === undefined) {
-        console.log("No se encontro data de freeling");
+        // console.log("No se encontro data de freeling");
         return;
       }
 
-      console.log(
-        "se econtro data de freeling: " +
-          Object.keys(freelingStatus.data?.wordGroups).length +
-          " palabra/s"
-      );
+      // console.log(
+      //   "se econtro data de freeling: " +
+      //     Object.keys(freelingStatus.data?.wordGroups).length +
+      //     " palabra/s"
+      // );
 
       saveWordGruopsToDB(freelingStatus.data?.wordGroups);
 
@@ -164,7 +204,7 @@ function SimpleEditor() {
       let processedDictionary = procesarDiccionario(diccionario);
       setWordDictionary(processedDictionary);
     });
-    console.log("Texto para analizar: ", textToAnalyze);
+    // console.log("Texto para analizar: ", textToAnalyze);
   }, [textToAnalyze]);
 
   useEffect(() => {
@@ -177,46 +217,50 @@ function SimpleEditor() {
 
     console.log("resultado de analisis: ", result);
     setResult(result);
+    guardarTexto(textToAnalyze);
   }, [wordDictionary]);
 
   return (
     <div
-      className={`flex h-[calc(100vh-210px)] m-10 ${
+      className={`flex h-[calc(100vh-210px)] m-2  ${
         selectedOption.section.length === 0
           ? "justify-start flex-col items-center"
           : "justify-center"
       } `}
     >
       {selectedOption.section ? (
-        <div className="flex flex-col flex-grow">
+        <div className="flex flex-col flex-grow ">
           <textarea
             onChange={(e) => {
               setUserInput(e.target.value);
             }}
             className="flex-1 resize-none"
           />
-          <button
-            type="button"
-            class="text-white bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 rounded-full text-sm px-2 py-1 text-center mb-2 inline-flex items-center justify-center gap-2 max-w-48"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              strokeWidth={1.5}
-              stroke="currentColor"
-              className="w-6 h-6"
+          <div className="text-sm flex items-center justify-center my-2 gap-2">
+            <button
+              type="button"
+              className="text-white bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 rounded-full px-2 py-1 text-center   inline-flex items-center justify-center gap-2 max-w-48"
             >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5m-13.5-9L12 3m0 0 4.5 4.5M12 3v13.5"
-              />
-            </svg>
-            Guardar avances
-          </button>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth={1.5}
+                stroke="currentColor"
+                className="w-6 h-6"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5m-13.5-9L12 3m0 0 4.5 4.5M12 3v13.5"
+                />
+              </svg>
+              Guardar avances
+            </button>
+            <p>{guardadoMensaje}</p>
+          </div>
 
-          <div className="flex-1 mt-2">
+          <div className="text-sm ">
             {result ? <p>{result.highlightedText}</p> : null}
           </div>
         </div>
@@ -242,7 +286,7 @@ function SimpleEditor() {
         </div>
       )}
 
-      <div className="flex flex-col flex-basis[300px] flex-shrink-0 ml-5 items-center">
+      <div className="flex flex-col mx-2 items-center">
         <AnalysisSelector
           selectedOption={selectedOption}
           setSelectedOption={setSelectedOption}
@@ -277,7 +321,6 @@ function SimpleEditor() {
         ) : (
           <p>Seleccione una opción para ver los resultados</p>
         )}
-        {}
       </div>
     </div>
   );
