@@ -1,3 +1,4 @@
+import { ID } from "appwrite";
 import { createContext, useContext, useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { account } from "../appwrite/appwriteConfig";
@@ -49,7 +50,9 @@ export const AuthProvider = ({ children }) => {
     setLoading(false);
   };
 
-  const registerUser = async (userInfo) => {};
+  const registerUser = async (email, password) => {
+    account.create(ID.unique(), email, password);
+  };
 
   const checkUserStatus = async () => {
     try {
