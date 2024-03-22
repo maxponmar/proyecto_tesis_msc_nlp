@@ -21,6 +21,7 @@ export const AuthProvider = ({ children }) => {
       console.log(accountDetails);
 
       setUser(accountDetails);
+      window.localStorage.setItem("user", JSON.stringify(accountDetails));
     } catch (error) {
       if (error?.type === "user_invalid_credentials") {
         toast.error(
@@ -39,8 +40,9 @@ export const AuthProvider = ({ children }) => {
   const logoutUser = async () => {
     setLoading(true);
     try {
-      await account.deleteSession("current");
       setUser(null);
+      window.localStorage.setItem("user", null);
+      await account.deleteSession("current");
     } catch (error) {
       console.error(error);
     }
@@ -51,9 +53,16 @@ export const AuthProvider = ({ children }) => {
 
   const checkUserStatus = async () => {
     try {
-      let accountDetails = await account.get();
-      setUser(accountDetails);
-      console.log(accountDetails);
+      const user = window.localStorage.getItem("user");
+      if (user) {
+        setUser(JSON.parse(user));
+        // let accountDetails = await account.get();
+        // setUser(accountDetails);
+        // console.log(accountDetails);
+        console.log(user);
+      } else {
+        setUser(null);
+      }
     } catch (error) {
       console.error(error);
     }
