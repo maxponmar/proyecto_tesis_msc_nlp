@@ -1,11 +1,9 @@
-import { ID } from "appwrite";
 import React, { useRef } from "react";
 import toast from "react-hot-toast";
 import { Link, Navigate, useNavigate } from "react-router-dom";
-import { account } from "../../appwrite/appwriteConfig";
 import { useAuth } from "../../context/AuthContext";
 export default function Register() {
-  const { user, loginUser } = useAuth();
+  const { user, loginUser, registerUser } = useAuth();
   const registerForm = useRef(null);
   const navigate = useNavigate();
 
@@ -26,11 +24,11 @@ export default function Register() {
       return;
     }
 
-    toast.promise(account.create(ID.unique(), email, password), {
+    toast.promise(registerUser(email, password), {
       loading: "Creando cuenta...",
       success: (data) => {
         console.log(data);
-        loginUser({ email, password });
+        navigate("/login");
         return "Cuenta creada exitosamente.";
       },
       error: (error) => {
