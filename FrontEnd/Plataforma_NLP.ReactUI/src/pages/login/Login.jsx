@@ -1,17 +1,14 @@
-import { useAuth0 } from "@auth0/auth0-react";
 import { useRef } from "react";
 import { Link, Navigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 
 function Login() {
-  const { loginWithPopup, isAuthenticated } = useAuth0();
   const { user, loginUser } = useAuth();
 
   const loginForm = useRef(null);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
     const email = loginForm.current.email.value;
     const password = loginForm.current.password.value;
 
