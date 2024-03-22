@@ -17,7 +17,7 @@ function Header() {
       </Link>
       {user ? (
         <div className="flex items-center justify-center">
-          <span class="bg-blue-100 text-blue-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded">
+          <span className="bg-blue-100 text-blue-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded">
             {user.email}
           </span>
 
