@@ -2,7 +2,7 @@ import React from "react";
 
 export default function Terms() {
   return (
-    <div className="max-w-2xl mx-auto mt-8 p-4 bg-white rounded-lg shadow-lg">
+    <div className="max-w-2xl mx-auto mt-8 p-4 bg-white rounded-lg shadow-lg mb-10">
       <h1 className="text-2xl font-bold mb-4">Términos y Condiciones de Uso</h1>
       <p className="mb-4">
         Por favor, lee estos términos y condiciones cuidadosamente antes de
