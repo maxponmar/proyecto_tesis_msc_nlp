@@ -70,7 +70,7 @@ const routes = [
     icon: BiLogIn,
     title: "Términos y Condiciones",
     allowedRoles: ["ALL"],
-    showOnSidebar: true,
+    showOnSidebar: false,
   },
   {
     path: "/guide",

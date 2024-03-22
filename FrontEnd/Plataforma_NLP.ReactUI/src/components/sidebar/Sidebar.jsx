@@ -91,8 +91,8 @@ function Sidebar() {
                 onClick={() => setShowSidebar(false)}
               />
               <SidebarLink
-                title="Soporte"
-                link="/support"
+                title="Términos y condiciones"
+                link="/termsandconditions"
                 icon={<BiSupport />}
                 onClick={() => setShowSidebar(false)}
               />
