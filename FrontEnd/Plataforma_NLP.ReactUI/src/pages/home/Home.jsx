@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
+import retmeepro from "../../assets/images/retmeepro.png";
 import { useAuth } from "../../context/AuthContext";
 import Login from "../login/Login";
-
 function Home() {
   const { user } = useAuth();
 
@@ -19,11 +19,16 @@ function Home() {
           <p className="text-xl font-bold">
             Abra el menú de la izquiera para ver más opciones
           </p>
+          <img
+            src={retmeepro}
+            alt="RetmeePro - Mejorando el Texto"
+            className="max-w-xs sm:max-w-md my-10"
+          />
           <Link
-            to="/support"
+            to="/termsandconditions"
             className="bg-itn text-white font-bold px-5 py-2 rounded-md my-10 hover:scale-105 active:translate-y-1 text-xl sm:text-2xl"
           >
-            Soporte
+            Consulta términos y condiciones
           </Link>
         </>
       )}
