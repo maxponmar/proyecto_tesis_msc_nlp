@@ -17,6 +17,10 @@ function Header() {
       </Link>
       {user ? (
         <div className="flex items-center justify-center">
+          <span class="bg-blue-100 text-blue-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded">
+            {user.email}
+          </span>
+
           <button
             type="button"
             className="focus:outline-none text-black  hover:bg-gray-200 focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-2 py-1 inline-flex items-center justify-center gap-2 mr-2"
