@@ -7,7 +7,7 @@ export default function AnalysisResults({
   selectedOptionLimits,
 }) {
   return (
-    <div>
+    <div className="mx-5">
       <h2 className="text-3xl font-bold mb-6">Resultados</h2>
       <p>
         Palabras Repetidas:{" "}
