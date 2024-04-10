@@ -1,6 +1,11 @@
+import { Query } from "appwrite";
 import React, { useEffect, useState } from "react";
+import { toast } from "react-hot-toast";
 import { useDebounce } from "use-debounce";
+import { v4 as uuidv4 } from "uuid";
 import { useLazyGetFreelingResultsQuery } from "../../api/defaultApi";
+import { databases } from "../../appwrite/appwriteConfig";
+import { compararTextos } from "../../utils/Textcomparator";
 import AnalysisResults from "./components/AnalysisResults";
 import AnalysisSelector from "./components/AnalysisSelector";
 import {
@@ -12,6 +17,7 @@ import {
 
 function SimpleEditor() {
   const [userInput, setUserInput] = useState("");
+  const [title, setTitle] = useState("");
   const [analyzing, setAnalyzing] = useState(false);
   const [debouncedInput] = useDebounce(userInput, 1000);
 
@@ -19,6 +25,7 @@ function SimpleEditor() {
   const [guardadoMensaje, setGuardadoMensaje] = useState("");
 
   const [textToAnalyze, setTextToAnalyze] = useState("");
+  const [textToAnalyzeCopy, setTextToAnalyzeCopy] = useState("");
 
   const [wordDictionary, setWordDictionary] = useState({});
   const [result, setResult] = useState(null);
@@ -32,15 +39,151 @@ function SimpleEditor() {
     variety: { LSL: 0, USL: 0 },
   });
 
-  const guardarTexto = () => {
-    setGuardadoMensaje("Guardado hace menos de 1 minuto");
-    console.log("Guardando texto...");
-    // Simulamos guardar el texto en una base de datos o servidor
-    console.log("Texto guardado:", textToAnalyze);
+  const guardarTexto = async () => {
+    if (textToAnalyze.length === 0) {
+      toast.error("No hay texto para guardar");
+      return;
+    }
 
-    // Actualizamos la hora del último guardado
-    setUltimoGuardado(new Date());
+    const differencia = compararTextos(textToAnalyze, textToAnalyzeCopy);
+    console.log("Diferencia: " + differencia);
+
+    if (differencia > 30) {
+      setGuardadoMensaje("Guardado hace menos de 1 minuto");
+      console.log("Guardando texto...");
+
+      const existingDocuments = await databases.listDocuments(
+        "65f3a533889a5597444f",
+        "65f3a5638c7727c66337",
+        [Query.equal("title", title)]
+      );
+
+      console.log(existingDocuments);
+
+      if (existingDocuments.total === 1) {
+        const createNewDocument = await databases.updateDocument(
+          "65f3a533889a5597444f",
+          "65f3a5638c7727c66337",
+          existingDocuments.documents[0].$id,
+          {
+            title,
+            content: textToAnalyze,
+            comments: "Texto guardado desde la plataforma NLP",
+          }
+        );
+        console.log(createNewDocument);
+      } else {
+        const createNewDocument = await databases.createDocument(
+          "65f3a533889a5597444f",
+          "65f3a5638c7727c66337",
+          uuidv4(),
+          {
+            title,
+            content: textToAnalyze,
+            comments: "Texto guardado desde la plataforma NLP",
+          }
+        );
+        console.log(createNewDocument);
+      }
+
+      // promise.then((response) => {
+      //   console.log(response);
+      // });
+
+      console.log("Texto guardado:", textToAnalyze);
+      setTextToAnalyzeCopy(textToAnalyze);
+
+      // Actualizamos la hora del último guardado
+      setUltimoGuardado(new Date());
+    }
   };
+
+  const guardarTextoManualmente = async () => {
+    if (textToAnalyze.length === 0) {
+      toast.error("No hay texto para guardar");
+      return;
+    }
+
+    const differencia = compararTextos(textToAnalyze, textToAnalyzeCopy);
+    console.log("Diferencia: " + differencia);
+
+    if (differencia > 0) {
+      setGuardadoMensaje("Guardado hace menos de 1 minuto");
+      console.log("Guardando texto...");
+
+      const existingDocuments = await databases.listDocuments(
+        "65f3a533889a5597444f",
+        "65f3a5638c7727c66337",
+        [Query.equal("title", title)]
+      );
+
+      console.log(existingDocuments);
+
+      if (existingDocuments.total === 1) {
+        const createNewDocument = await databases.updateDocument(
+          "65f3a533889a5597444f",
+          "65f3a5638c7727c66337",
+          existingDocuments.documents[0].$id,
+          {
+            title,
+            content: textToAnalyze,
+            comments: "Texto guardado desde la plataforma NLP",
+          }
+        );
+        console.log(createNewDocument);
+      } else {
+        const createNewDocument = await databases.createDocument(
+          "65f3a533889a5597444f",
+          "65f3a5638c7727c66337",
+          uuidv4(),
+          {
+            title,
+            content: textToAnalyze,
+            comments: "Texto guardado desde la plataforma NLP",
+          }
+        );
+        console.log(createNewDocument);
+      }
+
+      // promise.then((response) => {
+      //   console.log(response);
+      // });
+
+      console.log("Texto guardado:", textToAnalyze);
+
+      // Actualizamos la hora del último guardado
+      setUltimoGuardado(new Date());
+    }
+
+    setTextToAnalyzeCopy(textToAnalyze);
+  };
+
+  useEffect(() => {
+    if (textToAnalyze.length === 0) {
+      return;
+    }
+
+    // setGuardadoMensaje("Guardado hace menos de 1 minuto");
+    // console.log("Guardando texto...");
+    // const promise = databases.createDocument(
+    //   "65f3a533889a5597444f",
+    //   "65f3a5638c7727c66337",
+    //   uuidv4(),
+    //   {
+    //     content: textToAnalyze,
+    //     comments: "Texto guardado desde la plataforma NLP",
+    //   }
+    // );
+
+    // promise.then((response) => {
+    //   console.log(response);
+    // });
+
+    // console.log("Texto guardado:", textToAnalyze);
+
+    // // Actualizamos la hora del último guardado
+    // setUltimoGuardado(new Date());
+  }, [textToAnalyzeCopy]);
 
   const analyzeText = (text) => {
     const textParts = text.match(/\w+|\W+/g);
@@ -223,12 +366,12 @@ function SimpleEditor() {
   return (
     <div
       className={`flex h-[calc(100vh-210px)] m-2  ${
-        selectedOption.section.length === 0
+        selectedOption.section.length === 0 || title.length < 5
           ? "justify-start flex-col items-center"
           : "justify-center"
       } `}
     >
-      {selectedOption.section ? (
+      {selectedOption.section && title.length > 5 ? (
         <div className="flex flex-col flex-grow ">
           <textarea
             onChange={(e) => {
@@ -240,6 +383,7 @@ function SimpleEditor() {
             <button
               type="button"
               className="text-white bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 rounded-full px-2 py-1 text-center   inline-flex items-center justify-center gap-2 max-w-48"
+              onClick={guardarTextoManualmente}
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -290,6 +434,7 @@ function SimpleEditor() {
         <AnalysisSelector
           selectedOption={selectedOption}
           setSelectedOption={setSelectedOption}
+          setTitle={setTitle}
         />
         {analyzing ? (
           <div role="status" className="flex items-center justify-center">
@@ -311,7 +456,10 @@ function SimpleEditor() {
             </svg>
             <span className="sr-only">Cargando...</span>
           </div>
-        ) : result && selectedOption.section && !analyzing ? (
+        ) : result &&
+          selectedOption.section &&
+          !analyzing &&
+          title.length > 5 ? (
           <AnalysisResults
             analyses={result.scores}
             commonWords={result.commonWords}
@@ -319,7 +467,10 @@ function SimpleEditor() {
             selectedOptionLimits={selectedOption}
           />
         ) : (
-          <p>Seleccione una opción para ver los resultados</p>
+          <p className="max-w-[300px] p-4">
+            Introduzca un titulo de almenos 5 caracteres y seleccione una opción
+            para ver los resultados
+          </p>
         )}
       </div>
     </div>
