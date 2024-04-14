@@ -39,7 +39,7 @@ function SimpleEditor() {
     variety: { LSL: 0, USL: 0 },
   });
 
-  const guardarTexto = async () => {
+  const guardarTexto = async (scores) => {
     if (textToAnalyze.length === 0) {
       toast.error("No hay texto para guardar");
       return;
@@ -68,7 +68,7 @@ function SimpleEditor() {
           {
             title,
             content: textToAnalyze,
-            comments: "Texto guardado desde la plataforma NLP",
+            comments: JSON.stringify({ scores, option: selectedOption }),
           }
         );
         console.log(createNewDocument);
@@ -80,7 +80,7 @@ function SimpleEditor() {
           {
             title,
             content: textToAnalyze,
-            comments: "Texto guardado desde la plataforma NLP",
+            comments: JSON.stringify({ scores, option: selectedOption }),
           }
         );
         console.log(createNewDocument);
@@ -98,7 +98,7 @@ function SimpleEditor() {
     }
   };
 
-  const guardarTextoManualmente = async () => {
+  const guardarTextoManualmente = async (scores) => {
     if (textToAnalyze.length === 0) {
       toast.error("No hay texto para guardar");
       return;
@@ -127,7 +127,7 @@ function SimpleEditor() {
           {
             title,
             content: textToAnalyze,
-            comments: "Texto guardado desde la plataforma NLP",
+            comments: JSON.stringify({ scores, option: selectedOption }),
           }
         );
         console.log(createNewDocument);
@@ -139,7 +139,7 @@ function SimpleEditor() {
           {
             title,
             content: textToAnalyze,
-            comments: "Texto guardado desde la plataforma NLP",
+            comments: JSON.stringify({ scores, option: selectedOption }),
           }
         );
         console.log(createNewDocument);
@@ -279,7 +279,7 @@ function SimpleEditor() {
   // Efecto para guardar automáticamente después de 10 minutos
   useEffect(() => {
     const intervaloGuardadoAutomatico = setInterval(() => {
-      guardarTexto();
+      guardarTexto(result.scores);
     }, 600000); // 600000 milisegundos = 10 minutos
 
     return () => clearInterval(intervaloGuardadoAutomatico);
@@ -362,7 +362,7 @@ function SimpleEditor() {
 
     console.log("resultado de analisis: ", result);
     setResult(result);
-    guardarTexto(textToAnalyze);
+    guardarTexto(result.scores);
   }, [wordDictionary]);
 
   return (
@@ -385,7 +385,7 @@ function SimpleEditor() {
             <button
               type="button"
               className="text-white bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 rounded-full px-2 py-1 text-center   inline-flex items-center justify-center gap-2 max-w-48"
-              onClick={guardarTextoManualmente}
+              onClick={() => guardarTextoManualmente(result.scores)}
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
