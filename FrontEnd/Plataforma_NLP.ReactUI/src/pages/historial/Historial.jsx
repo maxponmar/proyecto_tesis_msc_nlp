@@ -21,7 +21,7 @@ export default function Historial() {
   }, []);
 
   return (
-    <div className="m-4 flex flex-wrap">
+    <div className="m-4 flex flex-wrap gap-4">
       {history.length === 0 ? (
         <div
           className="w-full flex items-center justify-center p-4 mb-4 text-sm text-blue-800 rounded-lg bg-blue-50"
