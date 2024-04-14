@@ -194,7 +194,9 @@ function SimpleEditor() {
 
     for (var key in wordDictionary) {
       if (wordDictionary[key].esStopword === false) {
-        nonStopWords.push(key);
+        for (let index = 0; index < wordDictionary[key].contador; index++) {
+          nonStopWords.push(key);
+        }
       }
     }
 
@@ -212,8 +214,8 @@ function SimpleEditor() {
 
     const uniqueWords = new Set(nonStopWords);
 
-    // console.log("nonStopWords: ", nonStopWords);
-    // console.log("uniqueWords: ", uniqueWords);
+    console.log("nonStopWords: ", nonStopWords);
+    console.log("uniqueWords: ", uniqueWords);
     // console.log("commonWords: ", commonWords);
 
     const N = cleanText.length;
@@ -222,8 +224,8 @@ function SimpleEditor() {
     const Nslex = Nlex - commonWords.length;
 
     // console.log("N: " + N);
-    // console.log("Nlex: " + Nlex);
-    // console.log("Tlex: " + Tlex);
+    console.log("Nlex: " + Nlex);
+    console.log("Tlex: " + Tlex);
     // console.log("Nslex: " + Nslex);
 
     const scores = [
@@ -263,7 +265,7 @@ function SimpleEditor() {
           return <span key={index}>{part}</span>;
         }
       }
-      return <span>{part}</span>;
+      return <span key={index}>{part}</span>;
     });
 
     return {
@@ -371,7 +373,7 @@ function SimpleEditor() {
           : "justify-center"
       } `}
     >
-      {selectedOption.section && title.length > 5 ? (
+      {selectedOption.section && title.length >= 5 ? (
         <div className="flex flex-col flex-grow ">
           <textarea
             onChange={(e) => {
@@ -459,7 +461,7 @@ function SimpleEditor() {
         ) : result &&
           selectedOption.section &&
           !analyzing &&
-          title.length > 5 ? (
+          title.length >= 5 ? (
           <AnalysisResults
             analyses={result.scores}
             commonWords={result.commonWords}
