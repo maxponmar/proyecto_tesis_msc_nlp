@@ -1,4 +1,6 @@
 import { AiFillHome } from "react-icons/ai";
+import { FaHistory } from "react-icons/fa";
+
 import {
   BiBookBookmark,
   BiLogIn,
@@ -8,6 +10,7 @@ import {
 } from "react-icons/bi";
 import "react-quill/dist/quill.snow.css";
 import FreelingApplication from "../pages/freeling/Freeling";
+import Historial from "../pages/historial/Historial";
 import Home from "../pages/home/Home";
 import Login from "../pages/login/Login";
 import Unauthorized from "../pages/noauthorized/Unauthorized";
@@ -33,6 +36,15 @@ const routes = [
     isProtected: true,
     icon: BiPencil,
     title: "Riqueza Lexica",
+    allowedRoles: ["ALL"],
+    showOnSidebar: true,
+  },
+  {
+    path: "/historial",
+    component: Historial,
+    isProtected: true,
+    icon: FaHistory,
+    title: "Historial",
     allowedRoles: ["ALL"],
     showOnSidebar: true,
   },
