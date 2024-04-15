@@ -23120,7 +23120,7 @@ function BR() {
         children: [
           $("img", {
             className: "w-8 h-8",
-            src: "/retmeepro.svg",
+            src: "retmeepro.svg",
             alt: "Continental Logo",
           }),
           $("p", { className: "ml-1", children: Li.appHeader }),
@@ -24914,7 +24914,7 @@ function wS() {
             children: [
               $("img", {
                 className: "w-8 h-8 mr-2",
-                src: "/retmeepro.svg",
+                src: "retmeepro.svg",
                 alt: "logo",
               }),
               "RetmeePro",
@@ -25084,7 +25084,7 @@ function ST() {
               children: [
                 $("img", {
                   className: "w-8 h-8 mr-2",
-                  src: "/retmeepro.svg",
+                  src: "retmeepro.svg",
                   alt: "logo",
                 }),
                 "RetmeePro",
@@ -36896,7 +36896,7 @@ function jL() {
                   e &&
                   $("img", {
                     className: "h-[55px] p-2",
-                    src: "/retmeepro.svg",
+                    src: "retmeepro.svg",
                     alt: "Continental Logo",
                   }),
               }),
