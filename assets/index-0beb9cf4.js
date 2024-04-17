@@ -36488,10 +36488,10 @@ function _L() {
       console.log("resultado de analisis: ", O), m(O), C(O.scores);
     }, [g]),
     B("div", {
-      className: `flex m-2 flex-col md:flex-row overflow-auto ${
+      className: `flex m-2 flex-col  overflow-auto ${
         S.section.length === 0 || n.length < 5
-          ? "justify-start flex-col items-center"
-          : "justify-center"
+          ? "justify-start flex-col items-center md:flex-col"
+          : "justify-center md:flex-row"
       } `,
       children: [
         S.section && n.length >= 5
