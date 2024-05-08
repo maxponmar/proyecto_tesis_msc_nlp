@@ -437,6 +437,7 @@ function SimpleEditor() {
           selectedOption={selectedOption}
           setSelectedOption={setSelectedOption}
           setTitle={setTitle}
+          title={title}
         />
         {analyzing ? (
           <div role="status" className="flex items-center justify-center">
