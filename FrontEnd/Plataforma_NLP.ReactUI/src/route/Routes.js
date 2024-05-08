@@ -3,12 +3,14 @@ import { FaHistory } from "react-icons/fa";
 
 import {
   BiBookBookmark,
+  BiInfoCircle,
   BiLogIn,
   BiLogOut,
   BiPencil,
   BiSupport,
 } from "react-icons/bi";
 import "react-quill/dist/quill.snow.css";
+import About from "../pages/about/About";
 import FreelingApplication from "../pages/freeling/Freeling";
 import Historial from "../pages/historial/Historial";
 import Home from "../pages/home/Home";
@@ -81,6 +83,15 @@ const routes = [
     isProtected: false,
     icon: BiLogIn,
     title: "Términos y Condiciones",
+    allowedRoles: ["ALL"],
+    showOnSidebar: false,
+  },
+  {
+    path: "/about",
+    component: About,
+    isProtected: false,
+    icon: BiInfoCircle,
+    title: "Contacto",
     allowedRoles: ["ALL"],
     showOnSidebar: false,
   },

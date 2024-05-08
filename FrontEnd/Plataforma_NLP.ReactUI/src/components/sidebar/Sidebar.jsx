@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { BiHelpCircle, BiLogIn, BiLogOut, BiSupport } from "react-icons/bi";
+import { BiInfoCircle, BiLogIn, BiLogOut, BiSupport } from "react-icons/bi";
 import { FaBars } from "react-icons/fa";
 import { useAuth } from "../../context/AuthContext";
 import routes from "../../route/Routes";
@@ -85,9 +85,9 @@ function Sidebar() {
                 />
               )}
               <SidebarLink
-                title="Guía"
-                link="/guide"
-                icon={<BiHelpCircle />}
+                title="Contacto"
+                link="/about"
+                icon={<BiInfoCircle />}
                 onClick={() => setShowSidebar(false)}
               />
               <SidebarLink
