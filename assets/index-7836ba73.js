@@ -23465,7 +23465,7 @@ function r3() {
           children: [
             T("img", {
               className: "w-24 h-24 my-3 rounded-full shadow-lg",
-              src: "/SamuelGonzalezLopez-Profile.jpeg",
+              src: "SamuelGonzalezLopez-Profile.jpeg",
               alt: "Perfil Samuel González López",
             }),
             T("h5", {
@@ -23510,7 +23510,7 @@ function r3() {
           children: [
             T("img", {
               className: "w-24 h-24 my-3 rounded-full shadow-lg",
-              src: "/MaximilianoPonceMarquez-Profile.jpeg",
+              src: "MaximilianoPonceMarquez-Profile.jpeg",
               alt: "Perfil Maximiliano Ponce Marquez",
             }),
             T("h5", {
