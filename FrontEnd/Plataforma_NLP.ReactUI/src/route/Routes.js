@@ -1,5 +1,6 @@
 import { AiFillHome } from "react-icons/ai";
 import { FaHistory } from "react-icons/fa";
+import { FcSurvey } from "react-icons/fc";
 
 import {
   BiBookBookmark,
@@ -11,6 +12,7 @@ import {
 } from "react-icons/bi";
 import "react-quill/dist/quill.snow.css";
 import About from "../pages/about/About";
+import Encuesta from "../pages/encuestas/Encuesta";
 import FreelingApplication from "../pages/freeling/Freeling";
 import Historial from "../pages/historial/Historial";
 import Home from "../pages/home/Home";
@@ -29,6 +31,15 @@ const routes = [
     isProtected: false,
     icon: AiFillHome,
     title: "Inicio",
+    allowedRoles: ["ALL"],
+    showOnSidebar: true,
+  },
+  {
+    path: "/encuesta",
+    component: Encuesta,
+    isProtected: true,
+    icon: FcSurvey,
+    title: "Encuesta",
     allowedRoles: ["ALL"],
     showOnSidebar: true,
   },

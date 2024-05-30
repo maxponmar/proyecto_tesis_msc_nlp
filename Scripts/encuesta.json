@@ -1,0 +1,27 @@
+[
+  {
+    "id": 1,
+    "pregunta": "¿Qué tan fácil te resultó entender cómo usar esta interfaz en tu primer intento?",
+    "rango": "Muy difícil - Muy fácil"
+  },
+  {
+    "id": 2,
+    "pregunta": "¿Encontraste que la interfaz era visualmente atractiva?",
+    "rango": "Muy desagradable - Muy atractiva"
+  },
+  {
+    "id": 3,
+    "pregunta": "¿Qué tan intuitivas te parecieron las funciones disponibles en la interfaz?",
+    "rango": "Nada intuitivo - Muy intuitivo"
+  },
+  {
+    "id": 4,
+    "pregunta": "¿Cuánto tiempo te llevó completar tu tarea usando esta interfaz?",
+    "rango": "Muy rápido - Muy lento"
+  },
+  {
+    "id": 5,
+    "pregunta": "¿Te encontraste con algún problema o dificultad al usar la interfaz? Si es así, por favor describe el problema.",
+    "rango": null
+  }
+]
