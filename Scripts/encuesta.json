@@ -21,6 +21,11 @@
   },
   {
     "id": 5,
+    "pregunta": "Pregunta pendiente",
+    "rango": "Muy rápido - Muy lento"
+  },
+  {
+    "id": 6,
     "pregunta": "¿Te encontraste con algún problema o dificultad al usar la interfaz? Si es así, por favor describe el problema.",
     "rango": null
   }
