@@ -23121,7 +23121,7 @@ function K3() {
           T("img", {
             className: "w-8 h-8",
             src: "retmeepro.svg",
-            alt: "RetmeePro Logo",
+            alt: "Continental Logo",
           }),
           T("p", { className: "ml-1", children: Li.appHeader }),
         ],
@@ -23525,7 +23525,7 @@ function oR() {
           children: [
             T("img", {
               className: "w-24 h-24 my-3 rounded-full shadow-lg",
-              src: "SamuelGonzalezLopez-Profile.jpeg",
+              src: "/SamuelGonzalezLopez-Profile.jpeg",
               alt: "Perfil Samuel González López",
             }),
             T("h5", {
@@ -23570,7 +23570,7 @@ function oR() {
           children: [
             T("img", {
               className: "w-24 h-24 my-3 rounded-full shadow-lg",
-              src: "MaximilianoPonceMarquez-Profile.jpeg",
+              src: "/MaximilianoPonceMarquez-Profile.jpeg",
               alt: "Perfil Maximiliano Ponce Marquez",
             }),
             T("h5", {
