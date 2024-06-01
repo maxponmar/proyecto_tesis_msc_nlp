@@ -23525,7 +23525,7 @@ function oR() {
           children: [
             T("img", {
               className: "w-24 h-24 my-3 rounded-full shadow-lg",
-              src: "/SamuelGonzalezLopez-Profile.jpeg",
+              src: "SamuelGonzalezLopez-Profile.jpeg",
               alt: "Perfil Samuel González López",
             }),
             T("h5", {
@@ -23570,7 +23570,7 @@ function oR() {
           children: [
             T("img", {
               className: "w-24 h-24 my-3 rounded-full shadow-lg",
-              src: "/MaximilianoPonceMarquez-Profile.jpeg",
+              src: "MaximilianoPonceMarquez-Profile.jpeg",
               alt: "Perfil Maximiliano Ponce Marquez",
             }),
             T("h5", {
@@ -25541,7 +25541,7 @@ function NR() {
             }),
             T("p", {
               className: "text-xl font-bold",
-              children: "Abra el menú de la izquiera para ver más opciones",
+              children: "Abra el menú de la izquierda para ver más opciones",
             }),
             T("img", {
               src: IR,
