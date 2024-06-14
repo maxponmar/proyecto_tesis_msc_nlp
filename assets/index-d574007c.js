@@ -38326,7 +38326,7 @@ const RS = [
   {
     path: "/riquezalexica",
     component: W6,
-    isProtected: !0,
+    isProtected: !1,
     icon: YR,
     title: "Riqueza Lexica",
     allowedRoles: ["ALL"],
