@@ -3,9 +3,9 @@ import { Account, Client, Databases } from "appwrite";
 const client = new Client();
 
 client
-    .setEndpoint('https://backend.vntres.com:444/v1')
-    .setProject('65f3a32050db0b8cbee5');
+  .setEndpoint("https://cloud.appwrite.io/v1")
+  .setProject("667992660031bbfe5c90");
 
 export const account = new Account(client);
 
-export const databases = new Databases(client, "65f3a533889a5597444f");
+export const databases = new Databases(client, "66799343001291419dbb");
