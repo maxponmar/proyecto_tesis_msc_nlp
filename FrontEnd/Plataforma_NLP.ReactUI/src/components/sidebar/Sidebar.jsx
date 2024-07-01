@@ -37,7 +37,7 @@ function Sidebar() {
             {showSidebar && (
               <img
                 className="h-[55px] p-2"
-                src="/retmeepro.svg"
+                src="retmeepro.svg"
                 alt="Continental Logo"
               />
             )}

@@ -12,7 +12,7 @@ function Header() {
         to="/"
         className="translate-x-[-60px] sm:translate-x-0 px-5 flex items-center justify-center min-w-[380px] text-sm md:min-w-[400px] md:text-lg"
       >
-        <img className="w-8 h-8" src="/retmeepro.svg" alt="Continental Logo" />
+        <img className="w-8 h-8" src="retmeepro.svg" alt="Continental Logo" />
         <p className="ml-1">{config.appHeader}</p>
       </Link>
       {user ? (

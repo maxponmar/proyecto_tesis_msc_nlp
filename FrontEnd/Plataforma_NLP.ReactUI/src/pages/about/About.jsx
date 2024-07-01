@@ -9,7 +9,7 @@ export default function About() {
         <div className="flex flex-col items-center pb-10">
           <img
             className="w-24 h-24 my-3 rounded-full shadow-lg"
-            src="/SamuelGonzalezLopez-Profile.jpeg"
+            src="SamuelGonzalezLopez-Profile.jpeg"
             alt="Perfil Samuel González López"
           />
           <h5 className="mb-1 text-xl font-medium text-gray-900">
@@ -48,7 +48,7 @@ export default function About() {
         <div className="flex flex-col items-center pb-10">
           <img
             className="w-24 h-24 my-3 rounded-full shadow-lg"
-            src="/MaximilianoPonceMarquez-Profile.jpeg"
+            src="MaximilianoPonceMarquez-Profile.jpeg"
             alt="Perfil Maximiliano Ponce Marquez"
           />
           <h5 className="mb-1 text-xl font-medium text-gray-900">
@@ -89,7 +89,7 @@ export default function About() {
         <div className="flex flex-col items-center pb-10">
           <img
             className="w-24 h-24 my-3 rounded-full shadow-lg"
-            src="/danielcarrascoprofile.jpg"
+            src="danielcarrascoprofile.jpg"
             alt="Perfil Daniel Alfredo Hernández Carrasco"
           />
           <h5 className="mb-1 text-xl font-medium text-gray-900">
@@ -114,7 +114,7 @@ export default function About() {
         <div className="flex flex-col items-center pb-10">
           <img
             className="w-24 h-24 my-3 rounded-full shadow-lg"
-            src="/jesuscarlosprofile.jpg"
+            src="jesuscarlosprofile.jpg"
             alt="Perfil Maximiliano Ponce Marquez"
           />
           <h5 className="mb-1 text-xl font-medium text-gray-900">
@@ -138,7 +138,7 @@ export default function About() {
         <div className="flex flex-col items-center pb-10">
           <img
             className="w-24 h-24 my-3 rounded-full shadow-lg"
-            src="/erwinprofile.jpg"
+            src="erwinprofile.jpg"
             alt="Perfil Maximiliano Ponce Marquez"
           />
           <h5 className="mb-1 text-xl font-medium text-gray-900">
