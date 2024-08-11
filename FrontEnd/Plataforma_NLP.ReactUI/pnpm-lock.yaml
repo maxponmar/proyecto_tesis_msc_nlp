@@ -74,6 +74,9 @@ dependencies:
   react-router-dom:
     specifier: ^6.9.0
     version: 6.22.3(react-dom@18.2.0)(react@18.2.0)
+  react-tooltip:
+    specifier: ^5.27.0
+    version: 5.27.0(react-dom@18.2.0)(react@18.2.0)
   sweetalert:
     specifier: ^2.1.2
     version: 2.1.2
@@ -1708,6 +1711,10 @@ packages:
     optionalDependencies:
       fsevents: 2.3.3
     dev: true
+
+  /classnames@2.5.1:
+    resolution: {integrity: sha512-saHYOzhIQs6wy2sVxTM6bUDsQO4F50V9RQ22qBpEdCW+I+/Wmke2HOl6lS6dTpdxVhb88/I6+Hs+438c3lfUow==}
+    dev: false
 
   /clone@2.1.2:
     resolution: {integrity: sha512-3Pe/CF1Nn94hyhIYpjtiLhdCoEoz0DqQ+988E9gmeEdQZlojxnOb74wctFyuwWQHzqyf9X7C7MG8juUpqBJT8w==}
@@ -3841,6 +3848,18 @@ packages:
     dependencies:
       '@remix-run/router': 1.15.3
       react: 18.2.0
+    dev: false
+
+  /react-tooltip@5.27.0(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-JXROcdfCEbCqkAkh8LyTSP3guQ0dG53iY2E2o4fw3D8clKzziMpE6QG6CclDaHELEKTzpMSeAOsdtg0ahoQosw==}
+    peerDependencies:
+      react: '>=16.14.0'
+      react-dom: '>=16.14.0'
+    dependencies:
+      '@floating-ui/dom': 1.6.3
+      classnames: 2.5.1
+      react: 18.2.0
+      react-dom: 18.2.0(react@18.2.0)
     dev: false
 
   /react-transition-group@4.4.5(react-dom@18.2.0)(react@18.2.0):

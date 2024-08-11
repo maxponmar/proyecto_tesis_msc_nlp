@@ -1,3 +1,4 @@
+import "react-tooltip/dist/react-tooltip.css";
 import feedbacksJson from "../../../assets/lexical/feedbacks.json";
 
 function getFeedback(status, metric) {
@@ -6,7 +7,7 @@ function getFeedback(status, metric) {
   return randomFeedback;
 }
 
-export default function AnalysisScore({ name, limits, score }) {
+export default function AnalysisScore({ name, limits, score, description }) {
   const percentage = score * 100;
   let barColor = "";
   let status = "";
@@ -26,7 +27,13 @@ export default function AnalysisScore({ name, limits, score }) {
   return (
     <div>
       <div className="flex gap-4 mb-4 justify-evenly">
-        <div className="text-lg font-semibold">{name}:</div>
+        <div
+          className="text-lg font-semibold cursor-pointer"
+          data-tooltip-id="my-tooltip"
+          data-tooltip-content={description}
+        >
+          {name}:
+        </div>
         <div className="w-3/4 flex items-center">
           <div className="w-full h-4 bg-gray-200 rounded-full min-w-[150px]">
             <div

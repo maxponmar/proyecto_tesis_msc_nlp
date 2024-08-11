@@ -1,6 +1,7 @@
 import { Query } from "appwrite";
 import React, { useEffect, useState } from "react";
 import { toast } from "react-hot-toast";
+
 import { useDebounce } from "use-debounce";
 import { v4 as uuidv4 } from "uuid";
 import { useLazyGetFreelingResultsQuery } from "../../api/defaultApi";
@@ -232,14 +233,20 @@ function SimpleEditor() {
       {
         name: "Variedad",
         score: Tlex / Nlex,
+        description:
+          "La variedad léxica se refiere a la diversidad de palabras diferentes utilizadas en un texto.",
       },
       {
         name: "Densidad",
         score: Tlex / N,
+        description:
+          "La densidad léxica se refiere a la proporción de palabras léxicas (sustantivos, adjetivos, verbos y adverbios) en un texto en relación con el total de palabras.",
       },
       {
         name: "Sofisticación",
         score: Nslex / Nlex,
+        description:
+          "La sofisticación léxica se refiere al uso de un vocabulario avanzado y variado, que incluye palabras menos comunes y más precisas, de acuerdo a la Real Academia Española (RAE)",
       },
     ];
 
@@ -311,6 +318,12 @@ function SimpleEditor() {
     if (debouncedInput.length === 0 || selectedOption.section.length === 0)
       return;
 
+    if (debouncedInput.length > 800) {
+      toast.error("El texto es demasiado largo (Excede los 800 caracteres)");
+      setAnalyzing(false);
+      return;
+    }
+
     eliminarPalabrasSecundarias(debouncedInput.trim()).then((filteredText) => {
       if (filteredText.length === 0) {
         // console.log("No hay palabras nuevas");
@@ -367,7 +380,7 @@ function SimpleEditor() {
 
   return (
     <div
-      className={`flex h-[calc(100vh-210px)] m-2  ${
+      className={`flex h-[calc(100vh-210px)] overflow-auto m-2  ${
         selectedOption.section.length === 0 || title.length < 5
           ? "justify-start flex-col items-center"
           : "justify-center"
@@ -403,6 +416,23 @@ function SimpleEditor() {
               </svg>
               Guardar avances
             </button>
+
+            {textToAnalyzeCopy.length > 800 ? (
+              <div
+                className="text-sm text-red-800 rounded-lg bg-red-50"
+                role="alert"
+              >
+                <span className="font-medium">Ojo!</span> El texto es demasiado
+                largo
+              </div>
+            ) : (
+              <div
+                className="text-sm text-green-800 rounded-lg bg-green-50"
+                role="alert"
+              >
+                <span className="font-medium">{debouncedInput.length}</span>
+              </div>
+            )}
             <p>{guardadoMensaje}</p>
           </div>
 
@@ -469,12 +499,7 @@ function SimpleEditor() {
             repeatedWords={result.repeatedWords}
             selectedOptionLimits={selectedOption}
           />
-        ) : (
-          <p className="max-w-[300px] p-4">
-            Introduzca un titulo de almenos 5 caracteres y seleccione una opción
-            para ver los resultados
-          </p>
-        )}
+        ) : null}
       </div>
     </div>
   );

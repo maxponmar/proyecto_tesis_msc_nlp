@@ -1,3 +1,4 @@
+import { Tooltip } from "react-tooltip";
 import AnalysisScore from "./AnalysisScore";
 
 export default function AnalysisResults({
@@ -19,19 +20,23 @@ export default function AnalysisResults({
       </p>
       <AnalysisScore
         name={analyses[0].name}
+        description={analyses[0].description}
         score={analyses[0].score}
         limits={selectedOptionLimits.variety}
       />
       <AnalysisScore
         name={analyses[1].name}
+        description={analyses[1].description}
         score={analyses[1].score}
         limits={selectedOptionLimits.density}
       />
       <AnalysisScore
         name={analyses[2].name}
+        description={analyses[2].description}
         score={analyses[2].score}
         limits={selectedOptionLimits.sophistication}
       />
+      <Tooltip id="my-tooltip" />
     </div>
   );
 }
