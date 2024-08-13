@@ -4,6 +4,7 @@ import { FcSurvey } from "react-icons/fc";
 
 import {
   BiBookBookmark,
+  BiFile,
   BiInfoCircle,
   BiLogIn,
   BiLogOut,
@@ -18,6 +19,7 @@ import Historial from "../pages/historial/Historial";
 import Home from "../pages/home/Home";
 import Login from "../pages/login/Login";
 import Unauthorized from "../pages/noauthorized/Unauthorized";
+import Objetivos from "../pages/objetivos/Objetivos";
 import Register from "../pages/register/Register";
 import SimpleEditor from "../pages/simpletexteditor/SimpleEditor";
 import PdfGuide from "../pages/support/PdfGuide";
@@ -67,6 +69,15 @@ const routes = [
     isProtected: false,
     icon: BiBookBookmark,
     title: "FreeLing",
+    allowedRoles: ["ALL"],
+    showOnSidebar: true,
+  },
+  {
+    path: "/objetivos",
+    component: Objetivos,
+    isProtected: false,
+    icon: BiFile,
+    title: "Objetivos",
     allowedRoles: ["ALL"],
     showOnSidebar: true,
   },
