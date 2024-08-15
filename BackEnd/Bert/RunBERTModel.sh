@@ -1,9 +1,9 @@
 python3 preprocess.py data.txt dccuchile/bert-base-spanish-wwm-uncased 128 > test.txt
 
-python3 run_ner.py --data_dir /content/drive/MyDrive/ColabNotebooks/BERT/Tests \
-    --labels /content/drive/MyDrive/ColabNotebooks/BERT/Tests/labels.txt \
-    --model_name_or_path /content/bert-base-ml-ner \
-    --output_dir /content/drive/MyDrive/ColabNotebooks/BERT/Tests/results \
+python3 run_ner.py --data_dir /root/projects/proyecto_tesis_msc_nlp/BackEnd/Bert/data \
+    --labels /root/projects/proyecto_tesis_msc_nlp/BackEnd/Bert/data/labels.txt \
+    --model_name_or_path /root/projects/proyecto_tesis_msc_nlp/BackEnd/Bert/pretrainedmodel \
+    --output_dir /root/projects/proyecto_tesis_msc_nlp/BackEnd/Bert/results \
     --max_seq_length  128 \
     --num_train_epochs 40 \
     --per_gpu_train_batch_size 16 \
