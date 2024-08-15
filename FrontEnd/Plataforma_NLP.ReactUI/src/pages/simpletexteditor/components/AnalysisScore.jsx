@@ -1,24 +1,111 @@
-export default function AnalysisScore({ name, limits, score }) {
+import "react-tooltip/dist/react-tooltip.css";
+import feedbacksJson from "../../../assets/lexical/feedbacks.json";
+
+function getFeedback(status, metric) {
+  var feedbacks = feedbacksJson[status][metric];
+  var randomFeedback = feedbacks[Math.floor(Math.random() * feedbacks.length)];
+  return randomFeedback;
+}
+
+export default function AnalysisScore({ name, limits, score, description }) {
   const percentage = score * 100;
-  let barColor = '';
+  let barColor = "";
+  let status = "";
 
   if (score <= limits?.LSL) {
-    barColor = 'bg-red-500';
+    barColor = "bg-red-500";
+    status = "bad";
   } else if (score < limits?.USL) {
-    barColor = 'bg-yellow-500';
+    barColor = "bg-yellow-500";
+    status = "medium";
   } else {
-    barColor = 'bg-green-500';
+    barColor = "bg-green-500";
+    status = "good";
   }
 
+  const feedback = getFeedback(status, name);
   return (
-    <div className="flex gap-4 mb-4 justify-evenly">
-      <div className="text-lg font-semibold">{name}:</div>
-      <div className="w-3/4 flex items-center">
-        <div className="w-full h-4 bg-gray-200 rounded-full min-w-[150px]">
-          <div className={`h-full rounded-full ${barColor}`} style={{ width: `${percentage}%` }} />
+    <div>
+      <div className="flex gap-4 mb-4 justify-evenly">
+        <div
+          className="text-lg font-semibold cursor-pointer"
+          data-tooltip-id="my-tooltip"
+          data-tooltip-content={description}
+        >
+          {name}:
         </div>
-        <div className="ml-4 text-lg font-semibold">{percentage.toFixed(2)}%</div>
+        <div className="w-3/4 flex items-center">
+          <div className="w-full h-4 bg-gray-200 rounded-full min-w-[150px]">
+            <div
+              className={`h-full rounded-full ${barColor}`}
+              style={{ width: `${percentage}%` }}
+            />
+          </div>
+          <div className="ml-4 text-lg font-semibold">
+            {percentage.toFixed(2)}%
+          </div>
+        </div>
       </div>
+      {status === "good" ? (
+        <div
+          className="flex items-center p-4 mb-4 text-sm text-green-800 rounded-lg bg-green-50 max-w-[350px]"
+          role="alert"
+        >
+          <svg
+            className="flex-shrink-0 inline w-4 h-4 me-3"
+            aria-hidden="true"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="currentColor"
+            viewBox="0 0 20 20"
+          >
+            <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z" />
+          </svg>
+          <span className="sr-only">Info</span>
+          <div>
+            <span className="font-medium">¡Felicidades!</span> {feedback}
+          </div>
+        </div>
+      ) : null}
+      {status === "bad" ? (
+        <div
+          className="flex items-center p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50 max-w-[350px]"
+          role="alert"
+        >
+          <svg
+            className="flex-shrink-0 inline w-4 h-4 me-3"
+            aria-hidden="true"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="currentColor"
+            viewBox="0 0 20 20"
+          >
+            <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z" />
+          </svg>
+          <span className="sr-only">Info</span>
+          <div>
+            <span className="font-medium">OJO!</span> {feedback}
+          </div>
+        </div>
+      ) : null}
+      {status === "medium" ? (
+        <div
+          className="flex items-center p-4 mb-4 text-sm text-yellow-800 rounded-lg bg-yellow-50 max-w-[350px]"
+          role="alert"
+        >
+          <svg
+            className="flex-shrink-0 inline w-4 h-4 me-3"
+            aria-hidden="true"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="currentColor"
+            viewBox="0 0 20 20"
+          >
+            <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z" />
+          </svg>
+          <span className="sr-only">Info</span>
+          <div>
+            <span className="font-medium">Ojo!</span> {feedback}
+          </div>
+        </div>
+      ) : null}
     </div>
   );
 }

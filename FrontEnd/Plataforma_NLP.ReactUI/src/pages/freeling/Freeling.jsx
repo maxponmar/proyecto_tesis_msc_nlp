@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import toast from "react-hot-toast";
 import { useLazyGetFreelingResultsQuery } from "../../api/defaultApi";
 import Wordgroups from "./components/Wordgroups";
 
@@ -12,7 +13,24 @@ const FreelingApplication = () => {
   };
 
   const handleProcessText = () => {
+    if (text === "") {
+      toast.error("El texto no puede estar vacío");
+      return;
+    }
     getFreelingAnalysis({ text });
+  };
+
+  const descargarArchivo = () => {
+    const contenido = freelingStatus.data?.result;
+    const blob = new Blob([contenido], { type: "text/plain" });
+    const url = URL.createObjectURL(blob);
+    const enlaceDescarga = document.createElement("a");
+    enlaceDescarga.href = url;
+    enlaceDescarga.download = "freeling.txt";
+    document.body.appendChild(enlaceDescarga);
+    enlaceDescarga.click();
+    document.body.removeChild(enlaceDescarga);
+    URL.revokeObjectURL(url);
   };
 
   return (
@@ -63,8 +81,8 @@ const FreelingApplication = () => {
               procesar el texto.
             </div>
           </div>
-        ) : freelingStatus.isLoading ? (
-          <div className="px-3 py-1 text-xs font-medium leading-none text-center text-blue-800 bg-blue-200 rounded-full animate-pulse">
+        ) : freelingStatus.isFetching ? (
+          <div className="px-3 py-4 text-xs font-medium leading-none text-center text-blue-800 bg-blue-200 rounded-full animate-pulse">
             Procesando...
           </div>
         ) : freelingStatus.data ? (
@@ -75,6 +93,28 @@ const FreelingApplication = () => {
                 <p key={index}>{line}</p>
               ))}
             </div>
+            <button
+              type="button"
+              className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 my-2 inline-flex justify-center items-center gap-1"
+              onClick={descargarArchivo}
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth={1.5}
+                stroke="currentColor"
+                className="w-5 h-5"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3"
+                />
+              </svg>
+              <p>Descargar resultados</p>
+            </button>
+
             <Wordgroups data={freelingStatus.data?.wordGroups} />
           </div>
         ) : null}

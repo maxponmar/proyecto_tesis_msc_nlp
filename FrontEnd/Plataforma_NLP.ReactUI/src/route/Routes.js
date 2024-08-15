@@ -1,84 +1,145 @@
-import { AiFillHome } from 'react-icons/ai';
-import { BiBookBookmark, BiLogIn, BiLogOut, BiPencil, BiSupport, BiTestTube } from 'react-icons/bi';
-import 'react-quill/dist/quill.snow.css';
-import FreelingApplication from '../pages/freeling/Freeling';
-import Home from '../pages/home/Home';
-import Login from '../pages/login/Login';
-import Unauthorized from '../pages/noauthorized/Unauthorized';
-import SimpleEditor from '../pages/simpletexteditor/SimpleEditor';
-import Tests from '../pages/simpletexteditor/Tests';
-import PdfGuide from '../pages/support/PdfGuide';
-import Support from '../pages/support/Support';
+import { AiFillHome } from "react-icons/ai";
+import { FaHistory } from "react-icons/fa";
+import { FcSurvey } from "react-icons/fc";
+
+import {
+  BiBookBookmark,
+  BiFile,
+  BiInfoCircle,
+  BiLogIn,
+  BiLogOut,
+  BiPencil,
+  BiSupport,
+} from "react-icons/bi";
+import "react-quill/dist/quill.snow.css";
+import About from "../pages/about/About";
+import Encuesta from "../pages/encuestas/Encuesta";
+import FreelingApplication from "../pages/freeling/Freeling";
+import Historial from "../pages/historial/Historial";
+import Home from "../pages/home/Home";
+import Login from "../pages/login/Login";
+import Unauthorized from "../pages/noauthorized/Unauthorized";
+import Objetivos from "../pages/objetivos/Objetivos";
+import Register from "../pages/register/Register";
+import SimpleEditor from "../pages/simpletexteditor/SimpleEditor";
+import PdfGuide from "../pages/support/PdfGuide";
+import Support from "../pages/support/Support";
+import Terms from "../pages/terms/Terms";
 
 const routes = [
   {
-    path: '/',
+    path: "/",
     component: Home,
     isProtected: false,
     icon: AiFillHome,
-    title: 'Inicio',
-    allowedRoles: ['ALL'],
+    title: "Inicio",
+    allowedRoles: ["ALL"],
     showOnSidebar: true,
   },
   {
-    path: '/simpleeditor',
+    path: "/encuesta",
+    component: Encuesta,
+    isProtected: true,
+    icon: FcSurvey,
+    title: "Encuesta",
+    allowedRoles: ["ALL"],
+    showOnSidebar: true,
+  },
+  {
+    path: "/riquezalexica",
     component: SimpleEditor,
-    isProtected: false,
+    isProtected: true,
     icon: BiPencil,
-    title: 'Text Editor',
-    allowedRoles: ['ALL'],
+    title: "Riqueza Lexica",
+    allowedRoles: ["ALL"],
     showOnSidebar: true,
   },
   {
-    path: '/freeling',
+    path: "/historial",
+    component: Historial,
+    isProtected: true,
+    icon: FaHistory,
+    title: "Historial",
+    allowedRoles: ["ALL"],
+    showOnSidebar: true,
+  },
+  {
+    path: "/freeling",
     component: FreelingApplication,
     isProtected: false,
     icon: BiBookBookmark,
-    title: 'FreeLing',
-    allowedRoles: ['ALL'],
+    title: "FreeLing",
+    allowedRoles: ["ALL"],
     showOnSidebar: true,
   },
   {
-    path: '/tests',
-    component: Tests,
+    path: "/objetivos",
+    component: Objetivos,
     isProtected: false,
-    icon: BiTestTube,
-    title: 'Tests',
-    allowedRoles: ['ALL'],
+    icon: BiFile,
+    title: "Objetivos",
+    allowedRoles: ["ALL"],
     showOnSidebar: true,
   },
   {
-    path: '/login',
+    path: "/login",
     component: Login,
     isProtected: false,
     icon: BiLogIn,
-    title: 'Login',
-    allowedRoles: ['ALL'],
+    title: "Login",
+    allowedRoles: ["ALL"],
     showOnSidebar: false,
   },
   {
-    path: '/guide',
+    path: "/register",
+    component: Register,
+    isProtected: false,
+    icon: BiLogIn,
+    title: "Registro",
+    allowedRoles: ["ALL"],
+    showOnSidebar: false,
+  },
+  {
+    path: "/termsandconditions",
+    component: Terms,
+    isProtected: false,
+    icon: BiLogIn,
+    title: "Términos y Condiciones",
+    allowedRoles: ["ALL"],
+    showOnSidebar: false,
+  },
+  {
+    path: "/about",
+    component: About,
+    isProtected: false,
+    icon: BiInfoCircle,
+    title: "Contacto",
+    allowedRoles: ["ALL"],
+    showOnSidebar: false,
+  },
+  {
+    path: "/guide",
     component: PdfGuide,
     isProtected: false,
     icon: BiLogOut,
-    title: 'Guía',
-    allowedRoles: ['ALL'],
+    title: "Guía",
+    allowedRoles: ["ALL"],
     showOnSidebar: false,
   },
   {
-    path: '/support',
+    path: "/support",
     component: Support,
     isProtected: false,
     icon: BiSupport,
-    title: 'Soporte',
-    allowedRoles: ['ALL'],
+    title: "Soporte",
+    allowedRoles: ["ALL"],
     showOnSidebar: false,
   },
   {
-    path: '/unauthorized',
+    path: "/unauthorized",
     component: Unauthorized,
     isProtected: false,
-    allowedRoles: ['ALL'],
+    allowedRoles: ["ALL"],
     showOnSidebar: false,
   },
 ];

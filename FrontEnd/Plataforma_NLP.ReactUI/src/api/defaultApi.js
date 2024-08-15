@@ -1,42 +1,42 @@
-import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import server from '../config/config.json';
+import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import server from "../config/config.json";
 
 export const defaultApi = createApi({
-  reducerPath: 'default',
+  reducerPath: "default",
   baseQuery: fetchBaseQuery({ baseUrl: server.apiurl }),
-  tagTypes: ['default'],
+  tagTypes: ["default"],
   endpoints: (builder) => ({
     getFreelingResults: builder.query({
       query: (text) => ({
-        url: "freeling",
-        method: 'POST',
-        body: text
+        url: "freeling/analyze",
+        method: "POST",
+        body: text,
       }),
-      invalidatesTags: ['default'],
+      invalidatesTags: ["default"],
     }),
     exampleQuery: builder.query({
       query: ({ token }) => {
         return {
           url: `default`,
           headers: {
-            Authorization: token ? 'Bearer ' + token : '',
+            Authorization: token ? "Bearer " + token : "",
           },
         };
       },
-      invalidatesTags: ['default'],
+      invalidatesTags: ["default"],
     }),
     exampleMutation: builder.mutation({
       query: ({ body, token }) => {
         return {
           url: `default`,
-          method: 'POST',
+          method: "POST",
           headers: {
-            Authorization: token ? 'Bearer ' + token : '',
+            Authorization: token ? "Bearer " + token : "",
           },
           body: body,
         };
       },
-      invalidatesTags: ['default'],
+      invalidatesTags: ["default"],
     }),
   }),
 });
