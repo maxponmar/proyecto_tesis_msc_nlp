@@ -6,9 +6,9 @@ import config from "./config/config.json";
 import { AuthProvider } from "./context/AuthContext";
 import ProtectedRoute from "./route/ProtectedRoute";
 import routes from "./route/Routes";
+
 function App() {
   document.title = config.appTitle;
-
   return (
     <>
       <AuthProvider>
