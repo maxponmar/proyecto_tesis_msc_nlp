@@ -8,3 +8,7 @@ BackEnd/Bert/pretrainedmodel/
 **/test.txt
 
 objetivo-*.txt
+
+**/cached*
+**/__pycache__
+**/results/
