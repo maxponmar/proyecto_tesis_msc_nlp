@@ -1,4 +1,5 @@
 import re
+import sys
 
 def procesar_objetivo(objetivo, ruta_archivo):
     """
@@ -17,16 +18,25 @@ def procesar_objetivo(objetivo, ruta_archivo):
         for token in tokens:
             archivo.write(f"{token} O\n")  # Escribe el token seguido de " O" y un salto de línea
 
-# Define el objetivo
-objetivo = (
-    "Implementar un sistema de gestión de inventarios en la nube que permita a las pequeñas y medianas empresas "
-    "controlar y monitorear en tiempo real su inventario, optimizando los procesos de abastecimiento y reduciendo "
-    "costos operativos."
-)
+def main():
+    if len(sys.argv) != 3:
+        print("Uso: python script.py <ruta_archivo_objetivo> <ruta_archivo_salida>")
+        sys.exit(1)
 
-# Define la ruta y nombre del archivo de salida
-ruta_archivo = "test.txt"  # Puedes cambiar esto a cualquier ruta o nombre que desees
+    ruta_archivo_objetivo = sys.argv[1]
+    ruta_archivo_salida = sys.argv[2]
 
-# Llama a la función con el objetivo y la ruta del archivo
-procesar_objetivo(objetivo, ruta_archivo)
+    # Lee el contenido del archivo de objetivo
+    try:
+        with open(ruta_archivo_objetivo, "r") as archivo_objetivo:
+            objetivo = archivo_objetivo.read()
+    except FileNotFoundError:
+        print(f"El archivo de objetivo '{ruta_archivo_objetivo}' no se encontró.")
+        sys.exit(1)
+
+    # Llama a la función con el objetivo y la ruta del archivo de salida
+    procesar_objetivo(objetivo, ruta_archivo_salida)
+
+if __name__ == "__main__":
+    main()
 
