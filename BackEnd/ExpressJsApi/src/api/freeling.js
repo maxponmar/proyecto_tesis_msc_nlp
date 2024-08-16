@@ -41,15 +41,16 @@ router.post("/analyze", async (req, res) => {
 
 router.post("/objetive", async (req, res) => {
   const text = req.body.text;
-
   try {
-    const response = await axios.post("http://66.94.124.10:4000/analyze_objective", {
+    const response = await axios.post("http://66.94.124.10:4000/analyze_objective/", {
       text: text,
+    }, {
+      timeout: 600000
     });
 
     res.json(response.data);
   } catch (error) {
-    res.status(500).send(error.toString());
+    res.status(500).send(error);
   }
 });
 
