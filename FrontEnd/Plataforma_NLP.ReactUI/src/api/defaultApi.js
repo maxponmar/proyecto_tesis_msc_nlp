@@ -14,6 +14,14 @@ export const defaultApi = createApi({
       }),
       invalidatesTags: ["default"],
     }),
+    getObjectiveAnalysis: builder.query({
+      query: (text) => ({
+        url: "freeling/objetive",
+        method: "POST",
+        body: text,
+      }),
+      invalidatesTags: ["default"],
+    }),
     exampleQuery: builder.query({
       query: ({ token }) => {
         return {
@@ -41,4 +49,4 @@ export const defaultApi = createApi({
   }),
 });
 
-export const { useLazyGetFreelingResultsQuery } = defaultApi;
+export const { useLazyGetFreelingResultsQuery, useLazyGetObjectiveAnalysisQuery } = defaultApi;

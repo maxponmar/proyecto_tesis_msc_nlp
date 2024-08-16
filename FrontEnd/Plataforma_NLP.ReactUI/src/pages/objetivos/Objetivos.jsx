@@ -1,44 +1,6 @@
 import axios from "axios";
 import React, { useState } from "react";
 
-const text = `
-Crear O
-una O
-aplicación O
-móvil O
-multiplataforma O
-que O
-permita O
-a O
-los O
-usuarios O
-gestionar O
-sus O
-tareas O
-diarias O
-de O
-manera O
-efectiva O
-, O
-implementando B-COMO
-características I-COMO
-como I-COMO
-notificaciones I-COMO
-, I-COMO
-recordatorios I-COMO
-y I-COMO
-una I-COMO
-interfaz I-COMO
-de I-COMO
-usuario I-COMO
-intuitiva I-COMO
-utilizando B-COMO
-Flutter I-COMO
-o I-COMO
-React I-COMO
-Native I-COMO
-. O
-`;
 
 const parseText = (text, label) => {
   return text
@@ -75,12 +37,13 @@ export default function Objetivos() {
     setError("");
     try {
       const response = await axios.post(
-        "https://conectividad-objetivos-open-ai.vercel.app/analizar_objetivo",
+        "https://express-freeling-bridge-api.vercel.app/api/v1/freeling/objetive",
         {
-          objetivo: inputText,
+          text: inputText,
         }
       );
-      setResult(response.data.resultado);
+      console.log(response)
+      setResult(response.data);
     } catch (err) {
       setError(
         "Hubo un error al procesar el objetivo. Por favor intenta de nuevo."
@@ -92,41 +55,50 @@ export default function Objetivos() {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
-      <div className="w-full max-w-md p-6 bg-white rounded-lg shadow-md">
-        <h1 className="text-2xl font-bold text-center text-gray-800">
-          Analizador de Objetivos
+    <div className="flex flex-col md:flex-row items-center justify-center gap-2 min-h-screen p-4 ">
+       <div className={`flex-1 ${!result ? 'w-full' : 'w-1/2'}`}>
+       <div className="max-w-[800px] p-6 bg-white rounded-lg shadow-md">
+          <h1 className="text-2xl font-bold text-center text-gray-800">
+            Analizador de Objetivos
+          </h1>
+          <form onSubmit={handleSubmit} className="mt-6">
+            <textarea
+              className="w-full p-4 text-gray-700 bg-gray-200 rounded-lg focus:outline-none focus:bg-white focus:ring-2 focus:ring-blue-400"
+              rows="4"
+              placeholder="Escribe aquí tu objetivo académico..."
+              value={inputText}
+              onChange={(e) => setInputText(e.target.value)}
+              required
+            />
+            <button
+              type="submit"
+              className="w-full mt-4 px-4 py-2 text-white bg-blue-500 rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400"
+              disabled={loading}
+            >
+              {loading ? "Analizando..." : "Analizar"}
+            </button>
+          </form>
+          {error && <p className="mt-4 text-red-500 text-center">{error}</p>}
 
-        </h1>
-        <div className="max-w-screen-lg mx-auto p-4">
-          <h2 className="font-bold">¿Cómo?</h2>
-          <div className="text-lg text-wrap max-w-[300px] overflow-auto leading-relaxed">{parseText(text, 'COMO')}</div>
         </div>
-        <form onSubmit={handleSubmit} className="mt-6">
-          <textarea
-            className="w-full p-4 text-gray-700 bg-gray-200 rounded-lg focus:outline-none focus:bg-white focus:ring-2 focus:ring-blue-400"
-            rows="4"
-            placeholder="Escribe aquí tu objetivo académico..."
-            value={inputText}
-            onChange={(e) => setInputText(e.target.value)}
-            required
-          />
-          <button
-            type="submit"
-            className="w-full mt-4 px-4 py-2 text-white bg-blue-500 rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400"
-            disabled={loading}
-          >
-            {loading ? "Analizando..." : "Analizar"}
-          </button>
-        </form>
-        {error && <p className="mt-4 text-red-500 text-center">{error}</p>}
-        {result && (
-          <div className="mt-6 p-4 bg-gray-100 rounded-lg">
-            <h2 className="text-xl font-semibold text-gray-700">Resultado:</h2>
-            <p className="mt-2 text-gray-800">{result}</p>
-          </div>
-        )}
       </div>
+    {result && (
+          <div className="flex-1 w-1/2 mt-6 p-4 bg-gray-100 rounded-lg">
+            <h2 className="text-xl font-semibold text-gray-700">Resultado:</h2>
+            <div>
+              <h2 className="font-bold">¿Qué?</h2>
+              <div className="text-lg text-wrap overflow-auto leading-relaxed">{parseText(result?.QUE, 'QUE')}</div>
+            </div>
+            <div>
+              <h2 className="font-bold">¿Cómo?</h2>
+              <div className="text-lg text-wrap overflow-auto leading-relaxed">{parseText(result?.COMO, 'COMO')}</div>
+            </div>
+            <div>
+              <h2 className="font-bold">¿Para qué?</h2>
+              <div className="text-lg text-wrap overflow-auto leading-relaxed">{parseText(result?.PARAQUE, 'PARAQUE')}</div>
+            </div>
+        </div>)}
     </div>
+
   );
 }
