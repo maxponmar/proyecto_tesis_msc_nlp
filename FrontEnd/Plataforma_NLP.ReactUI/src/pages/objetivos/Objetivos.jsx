@@ -27,7 +27,7 @@ const parseText = (text, label) => {
 
 export default function Objetivos() {
   const [inputText, setInputText] = useState("");
-  const [result, setResult] = useState("");
+  const [result, setResult] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
@@ -56,11 +56,12 @@ export default function Objetivos() {
 
   return (
     <div className="flex flex-col md:flex-row items-center justify-center gap-2 min-h-screen p-4 ">
-       <div className={`flex-1 ${!result ? 'w-full' : 'w-1/2'}`}>
-       <div className="max-w-[800px] p-6 bg-white rounded-lg shadow-md">
+       <div className={`flex-1 ${!result ? 'w-full mx-10' : 'w-1/2'} `}>
+       <div className="p-6 bg-white rounded-lg shadow-md">
           <h1 className="text-2xl font-bold text-center text-gray-800">
             Analizador de Objetivos
           </h1>
+          <p className="text-center">Puede tardar más de 20 segundos</p>
           <form onSubmit={handleSubmit} className="mt-6">
             <textarea
               className="w-full p-4 text-gray-700 bg-gray-200 rounded-lg focus:outline-none focus:bg-white focus:ring-2 focus:ring-blue-400"
