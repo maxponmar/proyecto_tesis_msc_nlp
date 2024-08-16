@@ -43,7 +43,7 @@ router.post("/objetive", async (req, res) => {
   const text = req.body.text;
 
   try {
-    const response = await axios.post("http://66.94.124.10:4000/api/analyze_objective", {
+    const response = await axios.post("http://66.94.124.10:4000/analyze_objective", {
       text: text,
     });
 
