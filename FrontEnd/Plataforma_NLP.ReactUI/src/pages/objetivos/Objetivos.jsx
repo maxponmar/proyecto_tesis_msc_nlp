@@ -1,6 +1,68 @@
 import axios from "axios";
 import React, { useState } from "react";
 
+const text = `
+Crear O
+una O
+aplicación O
+móvil O
+multiplataforma O
+que O
+permita O
+a O
+los O
+usuarios O
+gestionar O
+sus O
+tareas O
+diarias O
+de O
+manera O
+efectiva O
+, O
+implementando B-COMO
+características I-COMO
+como I-COMO
+notificaciones I-COMO
+, I-COMO
+recordatorios I-COMO
+y I-COMO
+una I-COMO
+interfaz I-COMO
+de I-COMO
+usuario I-COMO
+intuitiva I-COMO
+utilizando B-COMO
+Flutter I-COMO
+o I-COMO
+React I-COMO
+Native I-COMO
+. O
+`;
+
+const parseText = (text, label) => {
+  return text
+    .trim()
+    .split('\n')
+    .map((line, index) => {
+      const [word, label] = line.split(' ');
+      if (label === 'O') return <span
+      key={index}
+    >
+      {word} {' '}
+    </span>;
+      const isComo = label && label.includes(label);
+      return (
+        <span
+          key={index}
+          className={`${isComo ? 'bg-yellow-300' : ''}`}
+        >
+          {word} {' '}
+        </span>
+      );
+    });
+};
+
 export default function Objetivos() {
   const [inputText, setInputText] = useState("");
   const [result, setResult] = useState("");
@@ -34,7 +96,12 @@ export default function Objetivos() {
       <div className="w-full max-w-md p-6 bg-white rounded-lg shadow-md">
         <h1 className="text-2xl font-bold text-center text-gray-800">
           Analizador de Objetivos
+
         </h1>
+        <div className="max-w-screen-lg mx-auto p-4">
+          <h2 className="font-bold">¿Cómo?</h2>
+          <div className="text-lg text-wrap max-w-[300px] overflow-auto leading-relaxed">{parseText(text, 'COMO')}</div>
+        </div>
         <form onSubmit={handleSubmit} className="mt-6">
           <textarea
             className="w-full p-4 text-gray-700 bg-gray-200 rounded-lg focus:outline-none focus:bg-white focus:ring-2 focus:ring-blue-400"
