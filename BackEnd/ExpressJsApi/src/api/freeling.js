@@ -39,4 +39,18 @@ router.post("/analyze", async (req, res) => {
   }
 });
 
+router.post("/objetive", async (req, res) => {
+  const text = req.body.text;
+
+  try {
+    const response = await axios.post("http://66.94.124.10:4000/api/analyze_objective", {
+      text: text,
+    });
+
+    res.json(response.data);
+  } catch (error) {
+    res.status(500).send(error.toString());
+  }
+});
+
 module.exports = router;
