@@ -223,8 +223,8 @@ def process_text():
             command = "python3 /root/projects/proyecto_tesis_msc_nlp/BackEnd/Bert/preprocessobjetive.py " + input_file + " " + test_file
             result = run_bash_command(command)
 
-            print("1 >>>>>> " +command)
-            print("1 >>>>>> " +result)
+            #print("1 >>>>>> " +command)
+            #print("1 >>>>>> " +result)
 
 
             command = f"python3 /root/projects/proyecto_tesis_msc_nlp/BackEnd/Bert/Scripts/run_ner.py --data_dir {DATA_DIR} \
@@ -245,8 +245,8 @@ def process_text():
             # Ejecutar el segundo comando
             result = run_bash_command(command)
 
-            print("2 >>>>>> " + command)
-            print("2 >>>>>> " + result)
+            #print("2 >>>>>> " + command)
+            #print("2 >>>>>> " + result)
 
 
             # Leer el archivo de resultados
