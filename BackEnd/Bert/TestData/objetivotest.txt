@@ -1,0 +1,1 @@
+Desarrollar un sistema de gestión de bases de datos en la nub para facilitar el almacenamiento, la recuperación y la gestión eficiente de grandes volúmenes de datos en empresa, utilizando tecnologías como AWS o Azure para implementar un entorno seguro y escalable.
