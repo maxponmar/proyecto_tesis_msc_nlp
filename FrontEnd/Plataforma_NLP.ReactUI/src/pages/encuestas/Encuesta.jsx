@@ -10,7 +10,7 @@ export default function Encuesta() {
 
   useEffect(() => {
     databases
-      .listDocuments("66799343001291419dbb", "6679935c000731bbc506")
+      .listDocuments("66bf73cd00312cce7ee0", "66bf74c9000f04734823")
       .then((response) => {
         if (response?.documents[0]) {
           const encuesta = JSON.parse(response?.documents[0]?.encuesta);
@@ -101,8 +101,8 @@ export default function Encuesta() {
               } else {
                 toast.loading("Enviando respuestas, muchas gracias", questions);
                 const createNewDocument = await databases.createDocument(
-                  "66799343001291419dbb",
-                  "667993a3000785003611",
+                  "66bf73cd00312cce7ee0",
+                  "66bf7525001a4455ab88",
                   uuidv4(),
                   {
                     respuestas: JSON.stringify(questions),

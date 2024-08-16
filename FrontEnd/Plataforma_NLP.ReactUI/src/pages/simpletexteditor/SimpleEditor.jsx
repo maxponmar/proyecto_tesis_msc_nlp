@@ -54,8 +54,8 @@ function SimpleEditor() {
       console.log("Guardando texto...");
 
       const existingDocuments = await databases.listDocuments(
-        "66799343001291419dbb",
-        "667993e0003765850b77",
+        "66bf73cd00312cce7ee0",
+        "66bf75580022dc486477",
         [Query.equal("title", title)]
       );
 
@@ -63,8 +63,8 @@ function SimpleEditor() {
 
       if (existingDocuments.total === 1) {
         const createNewDocument = await databases.updateDocument(
-          "66799343001291419dbb",
-          "667993e0003765850b77",
+          "66bf73cd00312cce7ee0",
+          "66bf75580022dc486477",
           existingDocuments.documents[0].$id,
           {
             title,
@@ -75,8 +75,8 @@ function SimpleEditor() {
         console.log(createNewDocument);
       } else {
         const createNewDocument = await databases.createDocument(
-          "66799343001291419dbb",
-          "667993e0003765850b77",
+          "66bf73cd00312cce7ee0",
+          "66bf75580022dc486477",
           uuidv4(),
           {
             title,
@@ -113,8 +113,8 @@ function SimpleEditor() {
       console.log("Guardando texto...");
 
       const existingDocuments = await databases.listDocuments(
-        "66799343001291419dbb",
-        "667993e0003765850b77",
+        "66bf73cd00312cce7ee0",
+        "66bf75580022dc486477",
         [Query.equal("title", title)]
       );
 
@@ -122,8 +122,8 @@ function SimpleEditor() {
 
       if (existingDocuments.total === 1) {
         const createNewDocument = await databases.updateDocument(
-          "66799343001291419dbb",
-          "667993e0003765850b77",
+          "66bf73cd00312cce7ee0",
+          "66bf75580022dc486477",
           existingDocuments.documents[0].$id,
           {
             title,
@@ -134,8 +134,8 @@ function SimpleEditor() {
         console.log(createNewDocument);
       } else {
         const createNewDocument = await databases.createDocument(
-          "66799343001291419dbb",
-          "667993e0003765850b77",
+          "66bf73cd00312cce7ee0",
+          "66bf75580022dc486477",
           uuidv4(),
           {
             title,
@@ -167,8 +167,8 @@ function SimpleEditor() {
     // setGuardadoMensaje("Guardado hace menos de 1 minuto");
     // console.log("Guardando texto...");
     // const promise = databases.createDocument(
-    //   "66799343001291419dbb",
-    //   "667993e0003765850b77",
+    //   "66bf73cd00312cce7ee0",
+    //   "66bf75580022dc486477",
     //   uuidv4(),
     //   {
     //     content: textToAnalyze,

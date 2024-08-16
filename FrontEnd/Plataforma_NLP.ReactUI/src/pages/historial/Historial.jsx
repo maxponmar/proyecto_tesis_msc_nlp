@@ -19,7 +19,7 @@ export default function Historial() {
 
   useEffect(() => {
     databases
-      .listDocuments("66799343001291419dbb", "667993e0003765850b77")
+      .listDocuments("66bf73cd00312cce7ee0", "66bf75580022dc486477")
       .then((response) => {
         console.log(response);
         setHistory(response?.documents ?? []);
