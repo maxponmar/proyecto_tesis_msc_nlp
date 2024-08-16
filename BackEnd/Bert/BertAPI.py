@@ -7,6 +7,39 @@ app = Flask(__name__)
 
 folders = ["QUE","PARAQUE","COMO"]
 
+def process_section(text, tag):
+    words = text.splitlines()
+    processed = []
+    inside_tag = False
+    
+    for word in words:
+        # Separar la palabra de la etiqueta
+        parts = word.split()
+        if len(parts) == 2:
+            word, label = parts
+        else:
+            word, label = parts[0], None
+
+        # Si la etiqueta es O, simplemente agregar la palabra
+        if label == 'O':
+            processed.append(word)
+        # Si es la etiqueta de inicio (B-XXX), iniciar la sección
+        elif label == f'B-{tag}':
+            inside_tag = True
+            processed.append(f'{tag}[{word}')
+        # Si es la etiqueta interna (I-XXX), continuar la sección
+        elif label == f'I-{tag}' and inside_tag:
+            processed.append(word)
+        # Cerrar la sección si termina
+        elif label != f'I-{tag}' and inside_tag:
+            processed.append(']')
+            inside_tag = False
+    
+    # Cerrar cualquier sección abierta al final
+    if inside_tag:
+        processed.append(']')
+
+    return ' '.join(processed)
 
 def run_bash_command(command):
     try:
@@ -101,6 +134,8 @@ def process_text():
                 os.remove(test_file)
             if os.path.exists(results_file):
                 os.remove(results_file)
+
+    # Procesar cada parte del diccionario
 
     return jsonify(results)
 
