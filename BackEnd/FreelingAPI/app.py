@@ -9,6 +9,8 @@ start_freeling_server_command = "analyze -f es.cfg --server --port 50005 &"
 check_if_freeling_server_is_started_command = "ps aux | grep freeling"
 run_freeling_command = "analyzer_client 50005 <input>output"
 
+folders = ["QUE","PARAQUE","COMO"]
+
 app = Flask(__name__)
 
 CORS(
@@ -18,6 +20,39 @@ CORS(
     allow_headers=["Content-Type"],
 )
 
+def process_section(text, tag):
+    words = text.splitlines()
+    processed = []
+    inside_tag = False
+
+    for word in words:
+        # Separar la palabra de la etiqueta
+        parts = word.split()
+        if len(parts) == 2:
+            word, label = parts
+        else:
+            word, label = parts[0], None
+
+        # Si la etiqueta es O, simplemente agregar la palabra
+        if label == 'O':
+            processed.append(word)
+        # Si es la etiqueta de inicio (B-XXX), iniciar la sección
+        elif label == f'B-{tag}':
+            inside_tag = True
+            processed.append(f'{tag}[{word}')
+        # Si es la etiqueta interna (I-XXX), continuar la sección
+        elif label == f'I-{tag}' and inside_tag:
+            processed.append(word)
+        # Cerrar la sección si termina
+        elif label != f'I-{tag}' and inside_tag:
+            processed.append(']')
+            inside_tag = False
+
+    # Cerrar cualquier sección abierta al final
+    if inside_tag:
+        processed.append(']')
+
+    return ' '.join(processed)
 
 def run_bash_command(command):
     try:
@@ -153,6 +188,97 @@ def create_file():
             "wordGroups": word_groups,
         }
     )
+
+@app.route('/analyze_objective/', methods=['POST'])
+def process_text():
+    results = {}
+
+    for folder in folders:
+        # Directorios de trabajo
+        DATA_DIR = f'/root/projects/proyecto_tesis_msc_nlp/BackEnd/Bert/{folder}/data/'
+        RESULTS_DIR = f'/root/projects/proyecto_tesis_msc_nlp/BackEnd/Bert/{folder}/results/'
+        MODEL_DIR = f'/root/projects/proyecto_tesis_msc_nlp/BackEnd/Bert/{folder}/pretrainedmodel{folder}/'
+
+        # Generar un identificador único
+        unique_id = str(uuid.uuid4())
+
+        # Archivos a crear y comandos a ejecutar
+        input_file = os.path.join(DATA_DIR, f'objetivo-{unique_id}.txt')
+        test_file = os.path.join(DATA_DIR, f'test.txt')
+        results_file = os.path.join(RESULTS_DIR, 'test_predictions.txt')
+
+        try:
+            # Obtener datos de la solicitud
+            data = request.get_json()
+            if 'text' not in data:
+                return jsonify({"message": "Missing 'text' in request body"}), 400
+            text = data['text']
+
+
+            # Guardar el contenido en el archivo
+            with open(input_file, 'w') as file:
+                file.write(text)
+
+            # Ejecutar el primer comando
+            command = "python3 /root/projects/proyecto_tesis_msc_nlp/BackEnd/Bert/preprocessobjetive.py " + input_file + " " + test_file
+            result = run_bash_command(command)
+
+            print("1 >>>>>> " +command)
+            print("1 >>>>>> " +result)
+
+
+            command = f"python3 /root/projects/proyecto_tesis_msc_nlp/BackEnd/Bert/Scripts/run_ner.py --data_dir {DATA_DIR} \
+        --labels {DATA_DIR}/labels.txt \
+        --model_name_or_path {MODEL_DIR} \
+        --output_dir {RESULTS_DIR} \
+        --max_seq_length  128 \
+        --num_train_epochs 40 \
+        --per_gpu_train_batch_size 16 \
+        --save_steps 100 \
+        --seed 42 \
+        --do_predict \
+        --overwrite_cache \
+        --overwrite_output_dir \
+        --save_total_limit 2 \
+        --learning_rate 3e-05"
+
+            # Ejecutar el segundo comando
+            result = run_bash_command(command)
+
+            print("2 >>>>>> " + command)
+            print("2 >>>>>> " + result)
+
+
+            # Leer el archivo de resultados
+            if not os.path.exists(results_file):
+                return jsonify({"message": "Results file not found."}), 500
+
+            with open(results_file, 'r') as file:
+                results[folder] = file.read()
+
+            # Eliminar los archivos generados
+            os.remove(input_file)
+            os.remove(test_file)
+            if os.path.exists(results_file):
+                os.remove(results_file)
+
+        except subprocess.CalledProcessError as e:
+            return jsonify({"message": f"Error executing command: {str(e)}"}), 500
+        except Exception as e:
+            return jsonify({"message": f"An error occurred: {str(e)}"}), 500
+        finally:
+            # Eliminar los archivos generados
+            if os.path.exists(input_file):
+                os.remove(input_file)
+            if os.path.exists(test_file):
+                os.remove(test_file)
+            if os.path.exists(results_file):
+                os.remove(results_file)
+
+    # Procesar cada parte del diccionario
+
+    return jsonify(results)
+
 
 
 if __name__ == "__main__":
