@@ -192,7 +192,8 @@ def create_file():
 @app.route('/analyze_objective/', methods=['POST'])
 def process_text():
     results = {}
-
+    # Obtener datos de la solicitud
+    data = request.get_json()
     for folder in folders:
         # Directorios de trabajo
         DATA_DIR = f'/root/projects/proyecto_tesis_msc_nlp/BackEnd/Bert/{folder}/data/'
@@ -208,8 +209,7 @@ def process_text():
         results_file = os.path.join(RESULTS_DIR, 'test_predictions.txt')
 
         try:
-            # Obtener datos de la solicitud
-            data = request.get_json()
+
             if 'text' not in data:
                 return jsonify({"message": "Missing 'text' in request body"}), 400
             text = data['text']
