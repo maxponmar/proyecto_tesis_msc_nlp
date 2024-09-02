@@ -44946,9 +44946,9 @@ function YD() {
         }, [e]),
         x.useEffect(() => {
             if (!(a.length === 0 || S.section.length === 0)) {
-                if (a.split(" ").length > 800) {
+                if (a.split(" ").length > 3000) {
                     Xt.error(
-                        "El texto es demasiado largo (Excede las 800 palabras)"
+                        "El texto es demasiado largo (Excede las 3000 palabras)"
                     ),
                         i(!1);
                     return;
@@ -45026,7 +45026,7 @@ function YD() {
                                               "Guardar avances",
                                           ],
                                       }),
-                                      h.split(" ").length > 800
+                                      h.split(" ").length > 3000
                                           ? B("div", {
                                                 className:
                                                     "text-sm text-red-800 rounded-lg bg-red-50",
