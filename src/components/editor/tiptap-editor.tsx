@@ -26,6 +26,7 @@ export function TiptapEditor({
   const highlightPluginRef = useRef(createHighlightPlugin());
 
   const editor = useEditor({
+    immediatelyRender: false,
     extensions: [
       StarterKit.configure({
         // Disable all rich-text features — plain text only

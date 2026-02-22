@@ -21,7 +21,9 @@ export default function RegisterPage() {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
-  async function handleSubmit(formData: FormData) {
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    const formData = new FormData(e.currentTarget);
     const password = formData.get("password") as string;
     const confirm = formData.get("confirmPassword") as string;
 
@@ -38,9 +40,10 @@ export default function RegisterPage() {
 
     setLoading(true);
     setError(null);
-    sileo.info({ title: "Creando cuenta..." });
+    const loadingId = sileo.info({ title: "Creando cuenta..." });
     const result = await register(formData);
     if (result?.error) {
+      sileo.dismiss(loadingId);
       setError(result.error);
       sileo.error({ title: "Error al registrarse", description: result.error });
       setLoading(false);
@@ -57,7 +60,7 @@ export default function RegisterPage() {
             Completa los campos para registrarte
           </CardDescription>
         </CardHeader>
-        <form action={handleSubmit}>
+        <form onSubmit={handleSubmit}>
           <CardContent className="space-y-4">
             {error && <p className="text-sm text-destructive">{error}</p>}
             <div className="space-y-2">

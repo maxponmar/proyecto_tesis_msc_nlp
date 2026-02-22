@@ -21,12 +21,15 @@ export default function LoginPage() {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
-  async function handleSubmit(formData: FormData) {
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
     setLoading(true);
     setError(null);
-    sileo.info({ title: "Iniciando sesión..." });
+    const loadingId = sileo.info({ title: "Iniciando sesión..." });
+    const formData = new FormData(e.currentTarget);
     const result = await login(formData);
     if (result?.error) {
+      sileo.dismiss(loadingId);
       setError(result.error);
       sileo.error({ title: "Error al iniciar sesión", description: result.error });
       setLoading(false);
@@ -43,7 +46,7 @@ export default function LoginPage() {
             Ingresa tu correo electronico y contrasena
           </CardDescription>
         </CardHeader>
-        <form action={handleSubmit}>
+        <form onSubmit={handleSubmit}>
           <CardContent className="space-y-4">
             {error && <p className="text-sm text-destructive">{error}</p>}
             <div className="space-y-2">
