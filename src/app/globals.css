@@ -138,6 +138,12 @@
   color: oklch(0.681 0.17 83.77);
   font-weight: 700;
 }
+.dark .hl-repeated {
+  color: oklch(0.704 0.191 22.216);
+}
+.dark .hl-common {
+  color: oklch(0.769 0.188 70.08);
+}
 
 /* Tiptap editor base styles */
 .tiptap {
