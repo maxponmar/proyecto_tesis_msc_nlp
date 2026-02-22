@@ -66,12 +66,20 @@ Thumbs.db
 *.swp
 *~
 
+# Next.js
+.next/
+out/
+
 # Deployment
 .vercel/
 .serverless/
 .cache/
-.next/
 .nuxt/
+
+# Docusaurus
+docs/build/
+docs/.docusaurus/
+docs/node_modules/
 
 # Misc
 *.zip
