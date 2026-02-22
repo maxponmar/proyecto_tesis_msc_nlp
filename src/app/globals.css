@@ -128,3 +128,21 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* Tiptap word-highlight decorations */
+.hl-repeated {
+  color: oklch(0.577 0.245 27.325);
+  font-weight: 600;
+}
+.hl-common {
+  color: oklch(0.681 0.17 83.77);
+  font-weight: 700;
+}
+
+/* Tiptap editor base styles */
+.tiptap {
+  outline: none;
+}
+.tiptap p {
+  margin: 0;
+}
