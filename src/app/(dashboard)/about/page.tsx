@@ -30,7 +30,7 @@ const teamMembers: TeamMember[] = [
   {
     name: "Maximiliano Ponce Marquez",
     role: "Desarrollador, Aportador",
-    image: "/MaximilianoPonceMarquez-Profile.jpeg",
+    image: "/maximilianoponceprofile.jpeg",
     email: "contacto@maximilianoponce.com",
     linkedin: "https://www.linkedin.com/in/maximilianoponcemarquez/",
     website: "https://maximilianoponce.com/",
