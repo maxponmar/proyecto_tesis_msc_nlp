@@ -12,7 +12,7 @@ export async function GET() {
   }
 
   try {
-    const response = await fetch(`${process.env.NLP_FREELING_URL}/api/freeling`, {
+    const response = await fetch(`${process.env.NLP_FREELING_URL}/api/healthcheck`, {
       method: "GET",
       signal: AbortSignal.timeout(5000),
     });
