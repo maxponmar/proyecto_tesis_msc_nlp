@@ -27,13 +27,15 @@ export function AnalysisScore({ name, score, limits }: AnalysisScoreProps) {
     bad: "Bajo",
   };
 
-  // Get random feedback message for this status and metric
-  const feedbackKey = name as keyof (typeof FEEDBACKS)[string];
-  const messages = FEEDBACKS[status]?.[feedbackKey] ?? [];
+  // Pick a deterministic feedback message based on score + name
   const feedback = useMemo(() => {
-    if (messages.length === 0) return "";
-    return messages[Math.floor(Math.random() * messages.length)];
-  }, [messages]);
+    const feedbackKey = name as keyof (typeof FEEDBACKS)[string];
+    const msgs = FEEDBACKS[status]?.[feedbackKey] ?? [];
+    if (msgs.length === 0) return "";
+    // Use a simple hash of score to pick a stable index (no Math.random)
+    const index = Math.abs(Math.round(score * 1000)) % msgs.length;
+    return msgs[index];
+  }, [name, status, score]);
 
   return (
     <div className="space-y-2">
