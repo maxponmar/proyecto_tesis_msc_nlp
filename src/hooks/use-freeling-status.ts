@@ -5,8 +5,8 @@ import { sileo } from "sileo";
 
 type FreelingStatus = "connecting" | "starting" | "ready" | "error";
 
-const POLL_INTERVAL_MS = 3000;
-const MAX_POLL_ATTEMPTS = 10; // 30s max
+const POLL_INTERVAL_MS = 4000;
+const MAX_POLL_ATTEMPTS = 15; // 60s max
 
 export function useFreelingStatus() {
   const [status, setStatus] = useState<FreelingStatus>("connecting");
