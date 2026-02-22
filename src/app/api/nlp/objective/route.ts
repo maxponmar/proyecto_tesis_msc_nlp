@@ -15,16 +15,28 @@ export async function POST(request: NextRequest) {
 
   const body = await request.json();
 
-  const response = await fetch(
-    `${process.env.NLP_BERT_URL}/analyze_objective/`,
-    {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(body),
-      signal: AbortSignal.timeout(55000),
-    }
-  );
+  try {
+    const response = await fetch(
+      `${process.env.NLP_BERT_URL}/analyze_objective/`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body),
+        signal: AbortSignal.timeout(55000),
+      }
+    );
 
-  const data = await response.json();
-  return NextResponse.json(data);
+    const data = await response.json();
+
+    if (!response.ok) {
+      return NextResponse.json(data, { status: 502 });
+    }
+
+    return NextResponse.json(data);
+  } catch {
+    return NextResponse.json(
+      { error: "El servicio de análisis no respondió" },
+      { status: 503 }
+    );
+  }
 }
