@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback, useRef } from "react";
+import { sileo } from "sileo";
 
 type FreelingStatus = "connecting" | "starting" | "ready" | "error";
 
@@ -51,9 +52,11 @@ export function useFreelingStatus() {
       if (healthy) {
         stopPolling();
         setStatus("ready");
+        sileo.success({ title: "Servicio de análisis listo" });
       } else if (attemptsRef.current >= MAX_POLL_ATTEMPTS) {
         stopPolling();
         setStatus("error");
+        sileo.error({ title: "Servicio de análisis no disponible" });
       }
     }, POLL_INTERVAL_MS);
   }, [checkHealth, stopPolling]);

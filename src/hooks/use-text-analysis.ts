@@ -10,7 +10,7 @@ import {
   type AnalysisResult,
 } from "@/lib/nlp/analysis";
 import { DEBOUNCE_MS, CHAR_LIMIT } from "@/lib/nlp/constants";
-import { toast } from "sonner";
+import { sileo } from "sileo";
 
 export function useTextAnalysis(text: string, sectionSelected: boolean) {
   const [debouncedText] = useDebounce(text, DEBOUNCE_MS);
@@ -23,7 +23,7 @@ export function useTextAnalysis(text: string, sectionSelected: boolean) {
     if (!debouncedText.trim() || !sectionSelected) return;
 
     if (debouncedText.length > CHAR_LIMIT) {
-      toast.error(`El texto excede el límite de ${CHAR_LIMIT} caracteres`);
+      sileo.error({ title: `El texto excede el límite de ${CHAR_LIMIT} caracteres` });
       setAnalyzing(false);
       return;
     }
@@ -60,7 +60,7 @@ export function useTextAnalysis(text: string, sectionSelected: boolean) {
       setMetrics(result);
     } catch (error) {
       console.error("Analysis error:", error);
-      toast.error("Error al analizar el texto");
+      sileo.error({ title: "Error al analizar el texto" });
     } finally {
       setAnalyzing(false);
     }

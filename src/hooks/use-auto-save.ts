@@ -6,7 +6,7 @@ import { levenshteinDistance } from "@/lib/nlp/analysis";
 import { AUTO_SAVE_INTERVAL_MS, SAVE_THRESHOLD } from "@/lib/nlp/constants";
 import type { AnalysisResult } from "@/lib/nlp/analysis";
 import type { SectionThresholds } from "@/lib/nlp/constants";
-import { toast } from "sonner";
+import { sileo } from "sileo";
 
 export function useAutoSave(
   title: string,
@@ -24,7 +24,7 @@ export function useAutoSave(
   const save = useCallback(
     async (manual = false) => {
       if (!content.trim() || !title.trim()) {
-        if (manual) toast.error("No hay texto o título para guardar");
+        if (manual) sileo.error({ title: "No hay texto o título para guardar" });
         return;
       }
 
@@ -39,7 +39,7 @@ export function useAutoSave(
           data: { user },
         } = await supabase.auth.getUser();
         if (!user) {
-          toast.error("Sesión expirada, inicia sesión nuevamente");
+          sileo.error({ title: "Sesión expirada, inicia sesión nuevamente" });
           return;
         }
 
@@ -88,10 +88,10 @@ export function useAutoSave(
 
         lastSavedContent.current = content;
         setLastSavedAt(new Date());
-        if (manual) toast.success("Guardado exitosamente");
+        if (manual) sileo.success({ title: "Guardado exitosamente" });
       } catch (error) {
         console.error("Save error:", error);
-        toast.error("Error al guardar");
+        sileo.error({ title: "Error al guardar" });
       } finally {
         setSaving(false);
       }
