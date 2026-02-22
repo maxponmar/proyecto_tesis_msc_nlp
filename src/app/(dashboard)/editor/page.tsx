@@ -5,8 +5,7 @@ import { useTextAnalysis } from "@/hooks/use-text-analysis";
 import { useAutoSave } from "@/hooks/use-auto-save";
 import { useFreelingStatus } from "@/hooks/use-freeling-status";
 import { SectionSelector } from "@/components/editor/section-selector";
-import { TextInput } from "@/components/editor/text-input";
-import { TextPreview } from "@/components/editor/text-preview";
+import { TiptapEditor } from "@/components/editor/tiptap-editor";
 import { AnalysisResults } from "@/components/editor/analysis-results";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -88,13 +87,13 @@ export default function EditorPage() {
         />
       </div>
 
-      {/* Text input */}
-      <TextInput text={text} onChange={setText} analyzing={analyzing} />
-
-      {/* Highlighted preview */}
-      {Object.keys(dictionary).length > 0 && (
-        <TextPreview text={text} dictionary={dictionary} />
-      )}
+      {/* Tiptap editor with inline highlighting */}
+      <TiptapEditor
+        text={text}
+        onChange={setText}
+        dictionary={dictionary}
+        analyzing={analyzing}
+      />
 
       {/* Analysis results */}
       {metrics && selectedSection && (
