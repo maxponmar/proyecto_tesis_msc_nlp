@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { createClient } from "@/lib/supabase/server";
 import { logout } from "@/lib/supabase/auth-actions";
 import { Button } from "@/components/ui/button";
@@ -12,6 +13,7 @@ export async function Header() {
   return (
     <header className="flex h-14 items-center gap-4 border-b bg-background px-4">
       <SidebarTrigger />
+      <Image src="/retmeepro.svg" alt="RetmeePro" width={28} height={20} />
       <h1 className="text-lg font-semibold">RetmeePro</h1>
       <span className="text-sm text-muted-foreground">Mejorando el Texto</span>
       <div className="ml-auto flex items-center gap-2">
