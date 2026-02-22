@@ -29,23 +29,23 @@ export default function RegisterPage() {
 
     if (password !== confirm) {
       setError("Las contrasenas no coinciden");
-      sileo.warning({ title: "Las contraseñas no coinciden" });
+      sileo.warning({ title: "Las contraseñas no coinciden", fill: "#fbb615" });
       return;
     }
     if (password.length < 8) {
       setError("La contrasena debe tener al menos 8 caracteres");
-      sileo.warning({ title: "La contraseña debe tener al menos 8 caracteres" });
+      sileo.warning({ title: "La contraseña debe tener al menos 8 caracteres", fill: "#fbb615" });
       return;
     }
 
     setLoading(true);
     setError(null);
-    const loadingId = sileo.info({ title: "Creando cuenta..." });
+    const loadingId = sileo.info({ title: "Creando cuenta...", fill: "#272362", duration: 3000 });
     const result = await register(formData);
     if (result?.error) {
       sileo.dismiss(loadingId);
       setError(result.error);
-      sileo.error({ title: "Error al registrarse", description: result.error });
+      sileo.error({ title: "Error al registrarse", description: result.error, fill: "#ed1c80" });
       setLoading(false);
     }
   }

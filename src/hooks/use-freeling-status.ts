@@ -52,11 +52,11 @@ export function useFreelingStatus() {
       if (healthy) {
         stopPolling();
         setStatus("ready");
-        sileo.success({ title: "Servicio de análisis listo" });
+        sileo.success({ title: "Servicio de análisis listo", fill: "#61c3aa" });
       } else if (attemptsRef.current >= MAX_POLL_ATTEMPTS) {
         stopPolling();
         setStatus("error");
-        sileo.error({ title: "Servicio de análisis no disponible" });
+        sileo.error({ title: "Servicio de análisis no disponible", fill: "#ed1c80" });
       }
     }, POLL_INTERVAL_MS);
   }, [checkHealth, stopPolling]);
