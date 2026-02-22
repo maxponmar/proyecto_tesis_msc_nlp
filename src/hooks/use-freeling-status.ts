@@ -71,14 +71,10 @@ export function useFreelingStatus() {
         setStatus("ready");
       } else {
         setStatus("starting");
-        const started = await startService();
+        await startService();
         if (cancelled) return;
 
-        if (!started) {
-          setStatus("error");
-        } else {
-          pollUntilReady();
-        }
+        pollUntilReady();
       }
     }
 
