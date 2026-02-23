@@ -46,6 +46,7 @@ export function ObjectiveEditor({
       Extension.create({
         name: "objectiveHighlight",
         addProseMirrorPlugins() {
+          // eslint-disable-next-line react-hooks/rules-of-hooks -- stable ref, read once at init
           return [pluginRef.current];
         },
       }),
@@ -63,11 +64,11 @@ export function ObjectiveEditor({
     },
   });
 
-  // Toggle read-only when results are present
+  // Toggle read-only when results are present or analysis is running
   useEffect(() => {
     if (!editor || editor.isDestroyed) return;
-    editor.setEditable(!result);
-  }, [editor, result]);
+    editor.setEditable(!result && !analyzing);
+  }, [editor, result, analyzing]);
 
   // Sync highlight result into the plugin
   useEffect(() => {
