@@ -24,7 +24,7 @@ export function useAutoSave(
   const save = useCallback(
     async (manual = false) => {
       if (!content.trim() || !title.trim()) {
-        if (manual) sileo.error({ title: "No hay texto o título para guardar", fill: "#ed1c80" });
+        if (manual) sileo.error({ title: "No hay texto o título para guardar" });
         return;
       }
 
@@ -39,7 +39,7 @@ export function useAutoSave(
           data: { user },
         } = await supabase.auth.getUser();
         if (!user) {
-          sileo.error({ title: "Sesión expirada, inicia sesión nuevamente", fill: "#ed1c80" });
+          sileo.error({ title: "Sesión expirada, inicia sesión nuevamente" });
           return;
         }
 
@@ -88,10 +88,10 @@ export function useAutoSave(
 
         lastSavedContent.current = content;
         setLastSavedAt(new Date());
-        if (manual) sileo.success({ title: "Guardado exitosamente", fill: "#61c3aa" });
+        if (manual) sileo.success({ title: "Guardado exitosamente" });
       } catch (error) {
         console.error("Save error:", error);
-        sileo.error({ title: "Error al guardar", fill: "#ed1c80" });
+        sileo.error({ title: "Error al guardar" });
       } finally {
         setSaving(false);
       }

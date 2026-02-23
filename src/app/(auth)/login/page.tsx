@@ -25,13 +25,13 @@ export default function LoginPage() {
     e.preventDefault();
     setLoading(true);
     setError(null);
-    const loadingId = sileo.info({ title: "Iniciando sesión...", fill: "#272362", duration: 3000 });
+    const loadingId = sileo.info({ title: "Iniciando sesión...", duration: 3000 });
     const formData = new FormData(e.currentTarget);
     const result = await login(formData);
     if (result?.error) {
       sileo.dismiss(loadingId);
       setError(result.error);
-      sileo.error({ title: "Error al iniciar sesión", description: result.error, fill: "#ed1c80" });
+      sileo.error({ title: "Error al iniciar sesión", description: result.error });
       setLoading(false);
     }
   }
