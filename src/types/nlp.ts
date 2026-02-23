@@ -28,3 +28,10 @@ export interface LexicalMetrics {
   density: number;
   sophistication: number;
 }
+
+export interface FreelingApiResponse {
+  message: string;
+  original: string;
+  result: string;
+  wordGroups: Record<string, string[]>;
+}
