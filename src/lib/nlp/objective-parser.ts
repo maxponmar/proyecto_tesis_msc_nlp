@@ -24,14 +24,16 @@ const CATEGORIES: ObjectiveCategory[] = ["QUE", "COMO", "PARAQUE"];
 function parseBioTagged(raw: string, category: ObjectiveCategory): number[] {
   const lines = raw.trim().split("\n");
   const indices: number[] = [];
+  let wordIndex = 0;
 
   for (let i = 0; i < lines.length; i++) {
     const parts = lines[i].trim().split(/\s+/);
     if (parts.length < 2) continue;
     const label = parts[parts.length - 1];
     if (label === `B-${category}` || label === `I-${category}`) {
-      indices.push(i);
+      indices.push(wordIndex);
     }
+    wordIndex++;
   }
 
   return indices;
