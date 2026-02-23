@@ -1,5 +1,6 @@
 "use client";
 
+import { motion } from "motion/react";
 import { AnalysisScore } from "./analysis-score";
 import type { AnalysisResult } from "@/lib/nlp/analysis";
 import type { SectionThresholds } from "@/lib/nlp/constants";
@@ -11,7 +12,13 @@ interface AnalysisResultsProps {
 
 export function AnalysisResults({ metrics, section }: AnalysisResultsProps) {
   return (
-    <div className="space-y-4">
+    <motion.div
+      key={`${metrics.variety}-${metrics.density}-${metrics.sophistication}`}
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.4 }}
+      className="space-y-4"
+    >
       <div className="flex items-center gap-4 text-sm text-muted-foreground">
         <span>
           Palabras repetidas: <strong>{metrics.repeatedCount}</strong>
@@ -41,6 +48,6 @@ export function AnalysisResults({ metrics, section }: AnalysisResultsProps) {
           limits={section.sophistication}
         />
       </div>
-    </div>
+    </motion.div>
   );
 }

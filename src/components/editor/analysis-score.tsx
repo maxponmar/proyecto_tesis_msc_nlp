@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo } from "react";
+import { motion } from "motion/react";
 import { getScoreStatus } from "@/lib/nlp/analysis";
 import { FEEDBACKS } from "@/lib/nlp/constants";
 import { cn } from "@/lib/utils";
@@ -46,16 +47,22 @@ export function AnalysisScore({ name, score, limits }: AnalysisScoreProps) {
         </span>
       </div>
       <div className="h-2 w-full rounded-full bg-muted">
-        <div
-          className={cn(
-            "h-full rounded-full transition-all",
-            statusColors[status]
-          )}
-          style={{ width: `${percentage}%` }}
+        <motion.div
+          className={cn("h-full rounded-full", statusColors[status])}
+          initial={{ width: "0%" }}
+          animate={{ width: `${percentage}%` }}
+          transition={{ duration: 0.6, ease: "easeOut" }}
         />
       </div>
       {feedback && (
-        <p className="text-xs text-muted-foreground">{feedback}</p>
+        <motion.p
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.4, delay: 0.3 }}
+          className="text-xs text-muted-foreground"
+        >
+          {feedback}
+        </motion.p>
       )}
     </div>
   );
