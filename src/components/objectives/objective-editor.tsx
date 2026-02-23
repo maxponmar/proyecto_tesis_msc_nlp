@@ -64,22 +64,17 @@ export function ObjectiveEditor({
     },
   });
 
-  // Toggle read-only when results are present or analysis is running
+  // Sync editable state + highlight decorations when result or analyzing changes
   useEffect(() => {
     if (!editor || editor.isDestroyed) return;
     editor.setEditable(!result && !analyzing);
-  }, [editor, result, analyzing]);
-
-  // Sync highlight result into the plugin
-  useEffect(() => {
-    if (!editor || editor.isDestroyed) return;
     editor.view.dispatch(
       editor.view.state.tr.setMeta(
         objectiveHighlightKey,
         result ?? { words: [], tags: [] }
       )
     );
-  }, [editor, result]);
+  }, [editor, result, analyzing]);
 
   return (
     <div className="space-y-2">
