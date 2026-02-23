@@ -1,0 +1,35 @@
+# Virtual environments
+freeling/venv/
+bert/venv/
+
+# PID files
+*.pid
+
+# Logs
+logs/
+*.log
+
+# Temp working directories
+freeling/temp/
+bert/temp/
+
+# Environment
+.env
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+.eggs/
+
+# Model files (too large for git)
+models/
+
+# Cached features from transformers
+cached_*
+*.lock
+
+# OS
+.DS_Store
+Thumbs.db

@@ -1,0 +1,8 @@
+flask==3.1.*
+flask-cors==5.*
+gunicorn==23.*
+torch>=1.13,<3
+transformers>=4.30,<5
+seqeval>=1.2
+numpy<2
+filelock>=3.0
